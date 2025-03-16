@@ -8,7 +8,7 @@ const Navbar = () => {
     <header className="flex justify-between items-center text-black py-6 px-8 md:px-32 bg-white">
 
      <div className="text-2xl font-bold">
-        Diet<span className="text-orange-400">Maestro</span>
+        Diet<span className="text-orange-400">Maestroo</span>
 
      </div>
      
