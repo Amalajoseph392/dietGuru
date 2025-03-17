@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 import Burger from "../assets/images/healthyburger.jpg";
 
 
-const Login =  () => {
-
-
-
-
+function signIn() {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -23,10 +19,23 @@ const Login =  () => {
           <img src={Burger} alt="Burger" className="w-64 h-64" />
         </div>
 
-        {/* Right Side - Login Form */}
+        {/* Right Side - Sign In Form */}
         <div className="w-1/2 p-8">
-          <h2 className="text-2xl font-bold text-orange-600 mb-6">Welcome Back!</h2>
+          <h2 className="text-2xl font-bold text-orange-600 mb-6">Create Your Account</h2>
           <form className="space-y-6">
+            {/* Name Input */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                placeholder="Enter your name"
+              />
+            </div>
+
             {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -50,7 +59,7 @@ const Login =  () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 pr-10"
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                 />
                 <button
                   type="button"
@@ -62,14 +71,26 @@ const Login =  () => {
               </div>
             </div>
 
+            {/* Confirm Password Input */}
+            <div>
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="confirm-password"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 pr-10"
+                  placeholder="Confirm your password"
+                />
+              </div>
+            </div>
+
             {/* Links */}
             <div className="flex justify-between">
-                <a href="#" className="text-sm text-orange-500 hover:underline">
-                <Link to="/signin">Sign In</Link>
-                </a>
-                <a href="#" className="text-sm text-orange-500 hover:underline">
-                    Forgot Password?
-                </a>
+              <a href="#" className="text-sm text-orange-500 hover:underline">
+                <Link to="/">Already have an account?</Link>
+              </a>
             </div>
 
             {/* Submit Button */}
@@ -77,16 +98,13 @@ const Login =  () => {
               type="submit"
               className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-orange-600 focus:ring-2 focus:ring-orange-300"
             >
-              Log In
+              Sign Up
             </button>
           </form>
         </div>
       </div>
     </div>
   );
- 
-
-
 }
 
-export default Login;
+export default signIn;
