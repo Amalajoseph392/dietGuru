@@ -44,8 +44,8 @@ const typeData=[
 function types() {
   return (
     <section className="bg-white">
-        <div className="container mx-auto pb-12 mt-4 pt-6">
-            <h1 className="text-4xl justify-center text-center font-bold  pb-10"><span className="font-bold text-emerald-400 hover:text-yellow-400">Diet types</span> we provide</h1>
+        <div className="container mx-auto pb-12 mt-4 pt-6 animate-slide-in">
+            <h1 className="text-4xl justify-center text-center font-bold  pb-10"><span className="font-bold text-yellow-400 hover:text-emerald-400">Diet types</span> we provide</h1>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8">
                 {typeData.map((type)=>(
                     <div className="bg-[#f4f4f4] rounded-2xl flex flex-col gap-4 items-center justify-center p-4 py-7 hover:bg-white hover:scale-110 duration-300 hover:shadow-2xl">

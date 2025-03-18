@@ -17,11 +17,11 @@ function home() {
             
 
             </div>
-            <div className="mt-24 flex flex-col text-center ">
-                <h1 className='text-3xl md:text-4xl whitespace-nowrap font-bold'>Discover the perfect <span className='text-emerald-400 hover:text-yellow-400'>meal plan!</span> </h1>
-                <p class="mt-4 text-lg font-semibold px-4 sm:px-8 lg:px-16">Unlock your full potential with a tailored meal plan designed just for you. Our carefully crafted plans provide balanced nutrition to fuel your body and help you achieve your specific health goals. Start your journey today and experience the benefits of a healthier, more energized lifestyle!</p>
+            <div className="mt-24 flex flex-col text-center animate-slide-in">
+                <h1 className='text-3xl md:text-4xl whitespace-nowrap font-bold'>Discover the perfect <span className='text-yellow-400 hover:text-emerald-400'>meal plan!</span> </h1>
+                <p class="mt-4 text-lg font-normal px-4 sm:px-8 lg:px-16">Unlock your full potential with a tailored meal plan designed just for you. Our carefully crafted plans provide balanced nutrition to fuel your body and help you achieve your specific health goals. Start your journey today and experience the benefits of a healthier, more energized lifestyle!</p>
                 <div>
-                    <button className='sec-btn mt-4'>Explore</button>
+                    <button className='primary-btn mt-4 py-2 px-2 animate-slide-in'>Explore</button>
                 </div>
             </div>
 
