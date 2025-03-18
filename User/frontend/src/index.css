@@ -2,9 +2,25 @@
 
 @layer components{
     .primary-btn {
-        @apply inline-block p-2 text-yellow-400 border-1 rounded-2xl border-yellow-400 cursor-pointer hover:bg-emerald-400 hover:text-white hover:border-emerald-400 duration-200;
+        @apply inline-block p-2 text-yellow-500 font-bold border-1 rounded-2xl border-yellow-400 cursor-pointer hover:bg-emerald-400 hover:text-white hover:border-emerald-400 duration-200;
     }
     .sec-btn {
         @apply inline-block p-2 text-emerald-400 border-1 rounded-2xl border-emerald-400 cursor-pointer hover:bg-yellow-400 hover:text-white hover:border-yellow-400 duration-200;
     }
 }
+
+@keyframes slideIn {
+    0% {
+      transform: translateY(-40px); 
+      opacity: 0; 
+    }
+    100% {
+      transform: translateY(0); /* End at normal position */
+      opacity: 1; /* End visible */
+    }
+  }
+
+  /* Tailwind custom animation class */
+  .animate-slide-in {
+    animation: slideIn 2s ease-out forwards;
+  }
