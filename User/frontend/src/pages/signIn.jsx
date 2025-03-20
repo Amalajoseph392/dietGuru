@@ -89,7 +89,7 @@ function signIn() {
             {/* Links */}
             <div className="flex justify-between">
               <a href="#" className="text-sm text-orange-500 hover:underline">
-                <Link to="/">Already have an account?</Link>
+                <Link to="/login">Already have an account?</Link>
               </a>
             </div>
 

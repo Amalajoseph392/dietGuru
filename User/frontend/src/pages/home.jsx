@@ -12,7 +12,7 @@ function home() {
    <section className="bg-white  overflow-y-auto relative">
     <Navbar/>
     <div className='min-h-full'>
-        <div className="container mx-auto mt-1 grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+        <div className="container mx-auto px-6 mt-1 grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
             <div className=" bg-cover bg-center" style={{ backgroundImage: `url(${heroImage})` }}>
             
 
