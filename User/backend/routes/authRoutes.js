@@ -11,6 +11,9 @@ router.post('/register',authController.register)
 
 router.post('/login',authController.login)
 
+// ............... fetching all users ..................
+router.get('/users',authController.getAllUsers);
+
 //recepies-create
 
 router.post('/recepies-create', recepies.recepieCreate)
