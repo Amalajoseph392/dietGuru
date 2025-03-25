@@ -2,14 +2,58 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from 'react-router-dom';
 import Burger from "../assets/images/healthyburger.jpg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+
 
 
 const Login =  () => {
 
 
 
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+   
+
+  const [loginData,setLoginData]=useState({
+    email:"",
+    password:"",
+
+  });
+  
+
+  const handleChange=(e)=>{
+    
+    setLoginData({...loginData,[e.target.name]:e.target.value})
+    
+  }
+
+  const loginUser=async(e)=>{
+   e.preventDefault(); 
+    try{
+      const result=await axios.post("/api/auth/login", {
+        email:loginData.email,
+        password:loginData.password
+        
+      });
+      if(result)
+      {
+        console.log("successful");
+
+      }
+      alert(result.data.message);
+      navigate('/');
+      localStorage.setItem("email",loginData.email);
+   
+
+
+
+    }catch(error)
+    {
+      console.error("unsuccessful login", error.message)
+    }
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -34,9 +78,9 @@ const Login =  () => {
               </label>
               <input
                 type="email"
-                id="email"
+                id="email" name="email"
                 className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                placeholder="Enter your email"
+                placeholder="Enter your email" onChange={handleChange}
               />
             </div>
 
@@ -49,8 +93,9 @@ const Login =  () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
+                  name="password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 pr-10"
-                  placeholder="Enter your password"
+                  placeholder="Enter your password" onChange={handleChange}
                 />
                 <button
                   type="button"
@@ -64,9 +109,7 @@ const Login =  () => {
 
             {/* Links */}
             <div className="flex justify-between">
-                <a href="#" className="text-sm text-orange-500 hover:underline">
-                <Link to="/signin">Sign In</Link>
-                </a>
+                <Link to="/signin" className="text-sm text-orange-500 hover:underline">Sign In</Link>
                 <a href="#" className="text-sm text-orange-500 hover:underline">
                     Forgot Password?
                 </a>
@@ -74,7 +117,7 @@ const Login =  () => {
 
             {/* Submit Button */}
             <button
-              type="submit"
+              type="submit" onClick={loginUser}
               className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-orange-600 focus:ring-2 focus:ring-orange-300"
             >
               Log In

@@ -42,7 +42,7 @@ const Diet = () => {
               Start your Journey
             </button> 
             </Link>
-          </div>)}
+          </div>)};
         </div>
       
 
