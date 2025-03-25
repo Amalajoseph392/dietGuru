@@ -54,7 +54,25 @@ const login=async(req,res)=>{
     
 }
 
+
+//  .................. fetching all users from the table ....................................
+
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}, { password: 0 }); // Exclude passwords for security
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+    }
+};
+
+
+
+
+
+
 module.exports={
     register,
-    login
+    login,
+    getAllUsers
 }
