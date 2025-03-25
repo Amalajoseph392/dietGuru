@@ -43,7 +43,7 @@ function navbar() {
                         </li>
 
                     ))}
-            <Link to="/login">
+            <Link to="/signIn">
               <button className="primary-btn">Sign In</button>
             </Link>
                 </ul> 
