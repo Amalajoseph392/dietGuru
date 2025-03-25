@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from 'react-router-dom';
 import Burger from "../assets/images/healthyburger.jpg";
@@ -9,6 +10,46 @@ function signIn() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const [formData,setFormData]=useState({
+    name:"",
+    email:"",
+    password:""
+
+
+  });
+
+  const handleChange=(e)=>{
+    setFormData({...formData, [e.target.name]:e.target.value})
+  }
+
+  const registerUser=async(e)=>{
+    e.preventDefault(); 
+    if(formData.password!==formData.confirmPassword){
+      alert("Passwords do not match!");
+      return;
+    }
+    try{
+      console.log("am in reg fun");
+      
+      const result=await axios.post("/api/auth/register",{
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      })
+      console.log("got result");
+      
+      if(result)
+      {
+        alert(result.data.message);
+      }
+    }catch(error){
+      console.error("Unsuccessful registration",error);
+      
+      
+    }
+
   };
 
   return (
@@ -31,8 +72,9 @@ function signIn() {
               <input
                 type="text"
                 id="name"
+                name="name"
                 className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                placeholder="Enter your name"
+                placeholder="Enter your name" onChange={handleChange}
               />
             </div>
 
@@ -44,8 +86,9 @@ function signIn() {
               <input
                 type="email"
                 id="email"
+                name="email"
                 className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                placeholder="Enter your email"
+                placeholder="Enter your email" onChange={handleChange}
               />
             </div>
 
@@ -58,8 +101,9 @@ function signIn() {
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
+                  name="password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 pr-10"
-                  placeholder="Create a password"
+                  placeholder="Create a password" onChange={handleChange}
                 />
                 <button
                   type="button"
@@ -79,23 +123,25 @@ function signIn() {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  id="confirm-password"
+                  id="confirmPassword"
+                   name="confirmPassword"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 pr-10"
-                  placeholder="Confirm your password"
+                  placeholder="Confirm your password" onChange={handleChange}
                 />
               </div>
             </div>
 
             {/* Links */}
             <div className="flex justify-between">
-              <a href="#" className="text-sm text-orange-500 hover:underline">
-                <Link to="/login">Already have an account?</Link>
-              </a>
+              <Link to="/login" className="text-sm text-orange-500 hover:underline">
+                Already have an account?
+              </Link>
             </div>
+
 
             {/* Submit Button */}
             <button
-              type="submit"
+              type="submit" onClick={registerUser}
               className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-orange-600 focus:ring-2 focus:ring-orange-300"
             >
               Sign Up
