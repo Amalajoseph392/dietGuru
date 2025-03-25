@@ -11,7 +11,7 @@ function about() {
    
     <h1 className="text-4xl justify-center text-center font-bold  pb-10"> About Us</h1>
 
-        <div className="container mx-auto mt-1 grid grid-cols-1 md:grid-cols-2 min-h-[350px]">
+        <div className="container mx-auto px-6 mt-1 grid grid-cols-1 md:grid-cols-2 min-h-[350px]">
 
 
            

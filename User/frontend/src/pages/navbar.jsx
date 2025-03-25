@@ -1,5 +1,6 @@
 import React from 'react'
 import { IoMdMenu } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
 const NavbarMenu=[
     {
@@ -8,17 +9,17 @@ const NavbarMenu=[
         path:"/",
     },
     {
-        id:1,
+        id:2,
         title:"Diet Plan",
         path:"diet",
     },
     {
-        id:1,
+        id:3,
         title:"Recepies",
-        path:"/recepies",
+        path:"/recipies",
     },
     {
-        id:1,
+        id:4,
         title:"About Us",
         path:"/about",
     },
@@ -28,7 +29,7 @@ function navbar() {
   return (
    
     <nav>
-        <div className="container mx-auto py-2 flex justify-between items-center">
+        <div className="container mx-auto px-6 py-2 flex justify-between items-center">
             <div>
                 <h1 className="font-bold text-2xl">Diet<span className="font-bold text-2xl text-yellow-400 hover:text-emerald-400">Maestro</span></h1>
             </div>
@@ -42,8 +43,9 @@ function navbar() {
                         </li>
 
                     ))}
-                    <button className="primary-btn">Sign In</button>
-
+            <Link to="/login">
+              <button className="primary-btn">Sign In</button>
+            </Link>
                 </ul> 
 
             </div>
