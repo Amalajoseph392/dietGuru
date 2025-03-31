@@ -1,0 +1,3 @@
+{
+    "FetchUsers":"http://localhost:5000/api/auth/users"
+}

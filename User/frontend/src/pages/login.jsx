@@ -42,7 +42,6 @@ const Login =  () => {
         console.log("successful");
 
       }
-      alert(result.data.message);
       navigate('/');
       localStorage.setItem("email",loginData.email);
    

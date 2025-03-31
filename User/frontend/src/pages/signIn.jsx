@@ -3,10 +3,12 @@ import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from 'react-router-dom';
 import Burger from "../assets/images/healthyburger.jpg";
+import { useNavigate } from "react-router-dom";
 
 
 function signIn() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -31,18 +33,16 @@ function signIn() {
       return;
     }
     try{
-      console.log("am in reg fun");
       
       const result=await axios.post("/api/auth/register",{
         name: formData.name,
         email: formData.email,
         password: formData.password
-      })
-      console.log("got result");
+      });
       
       if(result)
       {
-        alert(result.data.message);
+        navigate("/login");
       }
     }catch(error){
       console.error("Unsuccessful registration",error);
