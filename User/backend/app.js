@@ -7,6 +7,8 @@ const cors = require('cors');
 
 const app=express();
 const PORT=process.env.PORT;
+app.use('/uploads', express.static('uploads')); 
+
 
 //db connection(importing from config)
 app.get('/', (req, res) => {

@@ -9,6 +9,8 @@ import Diet from './pages/diet';
 import KnowAbout from './pages/knowAbout';
 import Result from './pages/result';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/users';
+import AdminRecipes from './pages/admin/recipes';
 
 function App() {
   return (
@@ -28,6 +30,9 @@ function App() {
             <Route path="/know" element={<KnowAbout />} /> 
             <Route path="/result" element={<Result />} /> 
             <Route path="/AdminDashboard" element={<AdminDashboard />} /> 
+            <Route path="/AdminUsers" element={<AdminUsers />} /> 
+            <Route path="/AdminRecipes" element={<AdminRecipes />} /> 
+
 
 
           </Routes>
