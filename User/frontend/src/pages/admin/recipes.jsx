@@ -12,18 +12,21 @@
         { name: "Vegetable Stir Fry", description: "A quick and healthy dish with fresh veggies and soy sauce." },
       ]);
        const [newRecipe, setNewRecipe] = useState({
-          name: "",
-          description: "",
-          image: null, 
-          fileName:null,
-          previewImage:"",
+        name: "",
+        description: "",
+        cookingTime: "",
+        ingredients: "",
+        instructions: "",
+        image: null,
+        fileName: null,
+        previewImage: ""
           
         });
 
 
 
         const handleAddRecipe = async () => {
-          if (!newRecipe.name || !newRecipe.description || !newRecipe.image) {
+          if (!newRecipe.name || !newRecipe.description || !newRecipe.cookingTime || !newRecipe.ingredients || !newRecipe.instructions || !newRecipe.image) {
             alert("Please fill out all fields and upload an image.");
             return;
           }
@@ -31,7 +34,10 @@
           const formData = new FormData();
           formData.append("rec_name", newRecipe.name);
           formData.append("rec_exp", newRecipe.description);
-          formData.append("rec_image", newRecipe.image); 
+          formData.append("rec_cooking_time", newRecipe.cookingTime);
+          formData.append("rec_ingredients", newRecipe.ingredients);
+          formData.append("rec_instructions", newRecipe.instructions);
+          formData.append("rec_image", newRecipe.image);
         
           try {
             const response = await axios.post("http://localhost:5173/api/auth/recepies-create", 
@@ -41,7 +47,7 @@
         
             if (response.status === 201) {
               alert("Recipe added successfully!");
-              setNewRecipe({ name: "", description: "", image: null, fileName: null });
+              setNewRecipe({ name: "", description: "", cookingTime: "", ingredients: "", instructions: "", image: null, fileName: null, previewImage: "" });
               setShowModal(false);
             }
           } catch (error) {
@@ -87,117 +93,29 @@
 
     {/* Modal */}
     {showModal && (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-          <h2 className="text-xl font-bold mb-4">Add New Recipe</h2>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleAddRecipe();
-            }}
-          >
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Recipe Name
-              </label>
-              <input
-                type="text"
-                value={newRecipe.name}
-                onChange={(e) =>
-                  setNewRecipe({ ...newRecipe, name: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                required
-              />
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+              <h2 className="text-xl font-bold mb-4">Add New Recipe</h2>
+              <form onSubmit={(e) => { e.preventDefault(); handleAddRecipe(); }}>
+                <input type="text" placeholder="Recipe Name" value={newRecipe.name} onChange={(e) => setNewRecipe({ ...newRecipe, name: e.target.value })} required className="w-full px-4 py-2 border rounded mb-2" />
+                <textarea placeholder="Description" value={newRecipe.description} onChange={(e) => setNewRecipe({ ...newRecipe, description: e.target.value })} required className="w-full px-4 py-2 border rounded mb-2"></textarea>
+                <input type="number" placeholder="Cooking Time (mins)" value={newRecipe.cookingTime} onChange={(e) => setNewRecipe({ ...newRecipe, cookingTime: e.target.value })} required className="w-full px-4 py-2 border rounded mb-2" />
+                <input type="text" placeholder="Ingredients (comma separated)" value={newRecipe.ingredients} onChange={(e) => setNewRecipe({ ...newRecipe, ingredients: e.target.value })} required className="w-full px-4 py-2 border rounded mb-2" />
+                <textarea placeholder="Instructions" value={newRecipe.instructions} onChange={(e) => setNewRecipe({ ...newRecipe, instructions: e.target.value })} required className="w-full px-4 py-2 border rounded mb-2"></textarea>
+                <div className="mb-2">
+                  <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => document.getElementById("fileInput").click()}>Browse File</button>
+                  <input id="fileInput" type="file" accept="image/*" onChange={(e) => { const file = e.target.files[0]; if (file) { setNewRecipe({ ...newRecipe, image: file, fileName: file.name, previewImage: URL.createObjectURL(file) }); } }} className="hidden" />
+                </div>
+                {newRecipe.previewImage && <img src={newRecipe.previewImage} alt="Preview" className="w-full h-32 object-cover rounded mb-2" />}
+                
+                <div className="flex justify-end">
+                  <button type="button" onClick={() => setShowModal(false)} className="bg-gray-400 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                  <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Add Recipe</button>
+                </div>
+              </form>
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Description
-              </label>
-              <textarea
-                value={newRecipe.description}
-                onChange={(e) =>
-                  setNewRecipe({ ...newRecipe, description: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                required
-              ></textarea>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">Recipe Image</label>
-              <div
-                className="border-dashed border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500"
-                onClick={() => document.getElementById("fileInput").click()}
-              >
-                {newRecipe.image ? (
-                  <div className="flex flex-col items-center">
-                    <img
-                      src={newRecipe.image}
-                      alt="Recipe Preview"
-                      className="h-32 w-32 object-cover rounded-md mb-2"
-                    />
-                    <p className="text-gray-600 text-sm">{newRecipe.fileName}</p>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-12 w-12 text-gray-400 mb-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 12l-4-4m0 0l-4 4m4-4v12"
-                      />
-                    </svg>
-                    <p className="text-gray-500 font-medium">Upload a photo</p>
-                    <p className="text-gray-400 text-sm">Drag and drop files here</p>
-                  </div>
-                )}
-              </div>
-              <input
-                id="fileInput"
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                      setNewRecipe({
-                          ...newRecipe,
-                          image: file,  // Keep the File object for API submission
-                          fileName: file.name,
-                          previewImage: URL.createObjectURL(file) // Separate state for preview
-                      });
-                  }
-              }}
-              
-                className="hidden"
-            />
-
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => setShowModal(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                Add Recipe
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    )}
+          </div>
+        )}
   </div> 
   </div>  )
  }

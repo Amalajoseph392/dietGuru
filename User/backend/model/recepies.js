@@ -1,11 +1,14 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
-const recepieSchema=new mongoose.Schema({
-    rec_name:{type:String, required:true, unique:true},
-    rec_exp:{type:String,required:true},
-    rec_image:{type:String,required:true}
+const recipeSchema = new mongoose.Schema({
+    rec_name: { type: String, required: true, unique: true },
+    rec_exp: { type: String, required: true },
+    rec_cooking_time: { type: String, required: true },
+    rec_ingredients: { type: [String], required: true },
+    rec_instructions: { type: String, required: true },
+    rec_image: { type: String, required: true }
+});
 
+const Recipe = mongoose.model('Recipes', recipeSchema, "recepies-create");
 
-})
-
-module.exports=mongoose.model('Recepies', recepieSchema, "recepies-create");
+module.exports = Recipe;
