@@ -11,6 +11,9 @@ import Result from './pages/result';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsers from './pages/admin/users';
 import AdminRecipes from './pages/admin/recipes';
+import AdminDietian from './pages/admin/dietian';
+import Profile from './pages/profile';
+import DietDashboard from './pages/dietian/dashboard';
 
 function App() {
   return (
@@ -32,6 +35,10 @@ function App() {
             <Route path="/AdminDashboard" element={<AdminDashboard />} /> 
             <Route path="/AdminUsers" element={<AdminUsers />} /> 
             <Route path="/AdminRecipes" element={<AdminRecipes />} /> 
+            <Route path="/AdminDietian" element={<AdminDietian />} /> 
+            <Route path="/profile" element={<Profile/>}/>
+            <Route path="/DietDashboard" element={<DietDashboard/>}/>
+
 
 
 
