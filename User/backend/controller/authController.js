@@ -5,19 +5,15 @@ const jwt=require('jsonwebtoken');
 
 const register=async (req,res)=>{
     try{
-        const {name,email,password}=req.body;
-        console.log("yes here am");
+        const {name,email,password, role}=req.body;
         const existUser=await User.findOne({email});
-        console.log("yes here am 2");
         if(existUser){
             return res.status(400).json({message:'email already exists!'});
            
         }
 
-        const user=new User({name,email,password});
-        console.log("yes here am 3", user);
+        const user=new User({name,email,password, role});
         await user.save();
-        console.log("yes here am save");
 
         res.status(201).json({message:'User regsitered successfully'});
     }catch(err){
@@ -32,7 +28,6 @@ const login=async(req,res)=>{
 
         const {email,password}=req.body;
         const user=await User.findOne({email});
-        console.log("user",user);
         if(!user){
             return res.status(400).json({message:'Invalid email or password'});
 
@@ -40,9 +35,12 @@ const login=async(req,res)=>{
         if(user.password!==password){
             return res.status(400).json({message:'Invalid password!'})
         }
+        console.log("user", user);
+       
+        
 
         const token=jwt.sign({userId:user._id},process.env.JWT_SECRET,{expiresIn:'1h'});
-        res.status(200).json({message:'Login Successful',token});
+        res.status(200).json({message:'Login Successful',token, role:user.role, name:user.name, email:user.email});
 
     }
     catch(err){
@@ -66,6 +64,47 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+//delete user
+
+const deleteUser = async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        const deletedUser = await User.findOneAndDelete({ email });
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User deleted successfully', user: deletedUser });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to delete user', error: err.message });
+    }
+};
+
+
+//edit user
+
+const editUser = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const updates = req.body; 
+
+        const updatedUser = await User.findOneAndUpdate(
+            { email },
+            updates,
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to update user', error: err.message });
+    }
+};
 
 
 
@@ -74,5 +113,7 @@ const getAllUsers = async (req, res) => {
 module.exports={
     register,
     login,
-    getAllUsers
+    getAllUsers,
+    deleteUser,
+    editUser
 }

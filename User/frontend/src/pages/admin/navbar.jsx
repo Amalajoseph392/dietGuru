@@ -37,6 +37,14 @@ const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
               Recipes
             </Link>
           </li>
+          <li>
+            <Link
+              to="/AdminDietian"
+              className="block py-2 px-4 hover:bg-gray-700 rounded"
+            >
+              Dietitian
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>

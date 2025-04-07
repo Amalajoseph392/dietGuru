@@ -1,6 +1,8 @@
 const express=require('express');
 const authController=require('../controller/authController');
 const recepies = require('../controller/recepies');
+const diteian = require('../controller/dietian');
+
 const router=express.Router();
 const multer = require('multer');
 const path = require('path');
@@ -33,7 +35,21 @@ router.get('/users',authController.getAllUsers);
 
 //recepies-create
 
-router.post('/recepies-create',upload.single('rec_image'), recepies.recepieCreate)
+router.post('/recepies-create',upload.single('rec_image'), recepies.recepieCreate);
+
+//assign_users
+
+router.post('/dietian_users', diteian.user_assign);
+//delete user
+
+router.delete('/delete_users/:email', authController.deleteUser);
+
+//edit users
+
+router.put('/edit_user/:email', authController.editUser);
+
+router.get('/get_assign_user/:email', diteian.getUserByEmail);
+router.get('/assigned-dietitian/:email', diteian.getAssignedDietitian);
 
 module.exports=router;
 

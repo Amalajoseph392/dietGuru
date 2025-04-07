@@ -37,13 +37,19 @@ const Login =  () => {
         password:loginData.password
         
       });
-      if(result)
+      if(result.data.role=="user")
       {
-        console.log("successful");
+        navigate('/');
+
+      }else if(result.data.role=="admin")
+      {
+        navigate('/AdminDashboard');
+      }else if(result.data.role=="dietian"){
+        navigate('/DietDashboard');
 
       }
-      navigate('/');
-      localStorage.setItem("email",loginData.email);
+     
+      localStorage.setItem("user", JSON.stringify(result.data));
    
 
 

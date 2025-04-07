@@ -37,7 +37,8 @@ function signIn() {
       const result=await axios.post("/api/auth/register",{
         name: formData.name,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        role:"user"
       });
       
       if(result)
