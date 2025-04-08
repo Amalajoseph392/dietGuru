@@ -21,7 +21,7 @@ const RecipePage = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get("http://localhost:5173/api/auth/recipes");
+        const response = await axios.get("http://localhost:5000/api/auth/recipes");
         console.log("receipes from db",response.data);
         setRecipes(response.data);
       } catch (error) {
@@ -86,7 +86,7 @@ const RecipePage = () => {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={recipe.rec_image ? `http://localhost:5000/api/auth/${recipe.rec_image}` : "https://via.placeholder.com/150"}
+                    image={recipe.rec_image || 'http://localhost:5000/uploads/default-image.jpg'}
                     alt={recipe.rec_name}
                   />
                   <CardContent>

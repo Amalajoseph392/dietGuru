@@ -1,7 +1,7 @@
 const Recepies= require('../model/recepies');
 const path = require('path');
 
-
+//  ........................... create receipe .................................................
 
 const recepieCreate = async (req, res) => {
     // console.log("In function");
@@ -32,15 +32,21 @@ const recepieCreate = async (req, res) => {
 };
 
 
+// ................................. to fetch all the receipes form table ................................................................
 
 const getAllRecepies = async (req, res) => {
     try {
-        const recepies = await Recepies.find(); 
-        res.status(200).json(recepies);
+        const recepies = await Recepies.find();
+        const updatedRecepies = recepies.map(recipe => ({
+            ...recipe._doc,
+            rec_image: `http://localhost:5000${recipe.rec_image}`
+        }));
+        res.status(200).json(updatedRecepies);
     } catch (err) {
         res.status(500).json({ message: 'Something went wrong', error: err.message });
     }
 };
+
 
 
 //  ................ update receipes ......................
