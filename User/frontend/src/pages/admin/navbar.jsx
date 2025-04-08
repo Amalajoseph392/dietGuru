@@ -1,63 +1,77 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import { FaTachometerAlt, FaUsers, FaUtensils, FaUserMd, FaBars } from "react-icons/fa";
 
-function navbar() {
-const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div className="flex h-screen">
-    <div
-      className={`${
-        isMobileMenuOpen ? "block" : "hidden"
-      } lg:block w-64 bg-gray-800 text-white p-4 flex flex-col`}
-    >
-      <div className="text-xl font-bold mb-6">Diet Maestro Admin Panel</div>
-      <nav>
-        <ul>
-          <li>
-            <Link
-              to="/AdminDashboard"
-              className="block py-2 px-4 hover:bg-gray-700 rounded"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/AdminUsers"
-              className="block py-2 px-4 hover:bg-gray-700 rounded"
-            >
-              Users
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/AdminRecipes"
-              className="block py-2 px-4 hover:bg-gray-700 rounded"
-            >
-              Recipes
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/AdminDietian"
-              className="block py-2 px-4 hover:bg-gray-700 rounded"
-            >
-              Dietitian
-            </Link>
-          </li>
-        </ul>
-      </nav>
-    </div>
+    <div className="flex h-screen bg-white text-gray-800">
+      {/* Sidebar */}
+      <div
+        className={`${
+          isMobileMenuOpen ? "block" : "hidden"
+        } lg:block w-64 bg-white border-r border-gray-200 p-4 shadow-md`}
+      >
+        <div className="text-2xl font-bold  mb-8">
+          Diet<span className="text-yellow-400">Maestro</span>
+        </div>
+        <nav>
+          <ul className="space-y-2">
+            <li>
+              <Link
+                to="/AdminDashboard"
+                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
+              >
+                <FaTachometerAlt />
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/AdminUsers"
+                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
+              >
+                <FaUsers />
+                Users
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/AdminRecipes"
+                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
+              >
+                <FaUtensils />
+                Recipes
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/AdminDietian"
+                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
+              >
+                <FaUserMd />
+                Dietitian
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
-    {/* Hamburger Button (Mobile) */}
-    <button
-      className="lg:hidden p-4 text-white bg-gray-800"
-      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-    >
-      <span className="text-xl">&#9776;</span>
-    </button>
-</div>
-  )
+      {/* Hamburger Button (Mobile) */}
+      <button
+        className="lg:hidden absolute top-4 left-4 p-2 text-gray-800 bg-white border rounded shadow"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        <FaBars size={20} />
+      </button>
+
+      {/* Main content placeholder */}
+      <div className="flex-1 p-4">
+        {/* Your main content will render here */}
+      </div>
+    </div>
+  );
 }
 
-export default navbar
+export default Navbar;

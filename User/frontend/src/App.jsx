@@ -14,6 +14,8 @@ import AdminRecipes from './pages/admin/recipes';
 import AdminDietian from './pages/admin/dietian';
 import Profile from './pages/profile';
 import DietDashboard from './pages/dietian/dashboard';
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -22,6 +24,17 @@ function App() {
       <Router>
       
         <div>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="colored"
+        />
           
           <Routes>
             <Route path="/login" element={<LoginPage />} /> 

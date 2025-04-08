@@ -2,11 +2,11 @@ const express=require('express');
 const authController=require('../controller/authController');
 const recepies = require('../controller/recepies');
 const diteian = require('../controller/dietian');
+const user_input=require('../controller/meals');
 
 const router=express.Router();
 const multer = require('multer');
 const path = require('path');
-
 
 
 
@@ -33,6 +33,18 @@ router.post('/login',authController.login)
 // ............... fetching all users ..................
 router.get('/users',authController.getAllUsers);
 
+
+
+// ............... fetching all recepies ..................
+router.get("/recipes", recepies.getAllRecepies);
+
+// ............... update receipes by id ..................
+router.put('/recipes/:id', upload.single('rec_image'), recepies.recepieUpdate);
+
+// ......................... delete the recipe bi it's id ................................
+router.delete('/recipes/:id', recepies.deleteRecipeById);
+
+
 //recepies-create
 
 router.post('/recepies-create',upload.single('rec_image'), recepies.recepieCreate);
@@ -47,6 +59,8 @@ router.delete('/delete_users/:email', authController.deleteUser);
 //edit users
 
 router.put('/edit_user/:email', authController.editUser);
+
+router.post('/submit-input', user_input.user_data_meal);
 
 router.get('/get_assign_user/:email', diteian.getUserByEmail);
 router.get('/assigned-dietitian/:email', diteian.getAssignedDietitian);
