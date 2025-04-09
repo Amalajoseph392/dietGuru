@@ -3,11 +3,12 @@ const express=require('express');
 const connectDB = require('./config/dbConnection');
 const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
+const path = require("path");
 
 
 const app=express();
 const PORT=process.env.PORT;
-app.use('/uploads', express.static('uploads')); 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 //db connection(importing from config)

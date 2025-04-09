@@ -292,7 +292,7 @@ onClick={handleDownloadCSV}>
               <td className="px-4 py-2">
                 {recipe.rec_image && (
                   <img
-                    src={`http://localhost:5173${recipe.rec_image}`}
+                    src={recipe.rec_image || 'http://localhost:5000/uploads/default-image.jpg'}
                     alt={recipe.rec_name}
                     className="w-8 h-8 object-cover rounded-md mx-auto"
                   />

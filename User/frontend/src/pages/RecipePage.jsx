@@ -86,7 +86,7 @@ const RecipePage = () => {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={recipe.rec_image ? `http://localhost:5000/api/auth/${recipe.rec_image}` : "https://via.placeholder.com/150"}
+                    image={recipe.rec_image || 'http://localhost:5000/uploads/default-image.jpg'}
                     alt={recipe.rec_name}
                   />
                   <CardContent>
