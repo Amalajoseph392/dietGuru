@@ -1,6 +1,12 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import Navbar from './navbar';
+
+import Topbar from "./topbar";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+
 import { modalClasses } from "@mui/material";
 
 function dietian() {
@@ -16,6 +22,10 @@ function dietian() {
     const [isAssignUserModal,setAssignUserModal]=useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+        const [searchQuery, setSearchQuery] = useState("");
+    
+
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -231,7 +241,50 @@ function dietian() {
         }
       };
       
+
+     const downloadCSV = () => {
+             const headers = ["Name", "Email"];
+             const rows = users
+               .filter(user => user.role === 'dietian')
+               .map(user => [user.name, user.email]);
+           
+             const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+           
+             const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+             const url = URL.createObjectURL(blob);
+           
+             const link = document.createElement("a");
+             link.setAttribute("href", url);
+             link.setAttribute("download", "dietitian.csv");
+             link.click();
+           };
      
+          
+     
+     const downloadPDF = () => {
+       const doc = new jsPDF();
+       const table = document.querySelector('#user-table');
+     
+       // if (!table) {
+         console.error('Table not found!',doc);
+       //   return;
+       // }
+     
+       // doc.autoTable({
+       //   html: table, 
+       //   styles: { fontSize: 10 },
+       // });
+     
+       doc.autoTable({
+         head: [['Username', 'Email', 'Role']],
+         body: users.map(user => [user.username, user.email, user.role]),
+       });
+     
+       doc.save('users.pdf');
+     };
+
+     
+
     
     
    return (
@@ -241,33 +294,76 @@ function dietian() {
 
 <div className="flex h-screen gap-8">
 <Navbar/>
-<div className="flex-1 p-6 overflow-auto">
+
+<div className="flex-1">
+  <Topbar/>
+  <div className="flex-1 p-6 overflow-auto">
+  <h1 className="text-2xl font-bold mb-5">Dietitians</h1>
+
       <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold mb-5">Dietitians</h1>
+            <div className="relative flex mb-4">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            🔍
+          </span>
+          <input
+            type="text"
+            placeholder="Search by name or email"
+            className="pl-10 pr-4 py-2 border border-gray-200 rounded-md w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+          />
+       
+       <button
+  onClick={downloadCSV}
+  className="ml-4 px-4 py-2 bg-blue-500 flex items-center gap-2 rounded-md hover:bg-blue-500"
+>
+<i class="bi bi-filetype-csv"></i>
+
+</button>
+
+
+<button
+  onClick={downloadPDF}
+  className="ml-2 px-4 py-2 bg-red-400 flex items-center gap-2 rounded-md hover:bg-red-600 text-white"
+>
+<i class="bi bi-file-earmark-pdf"></i>
+  
+</button>
+
+
+</div>
             <button
               onClick={() => setAddModal(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-600"
+
+
             >
               + Add Dietitian
             </button>
       </div>
             <div className="overflow-x-auto">
-              <table className="table-auto w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-200 text-left">
-                    <th className="border border-gray-300 px-4 py-2">No</th>
-                    <th className="border border-gray-300 px-4 py-2">Name</th>
-                    <th className="border border-gray-300 px-4 py-2">Email</th>
-                    <th className="border border-gray-300 px-4 py-2">Action</th>
-                  </tr>
-                </thead>
+
+            <table id="user-table" className="table-auto w-full text-md border border-gray-200 rounded-4xl">
+  <thead>
+    <tr className="bg-gray-200 text-left">
+      <th className="px-4 py-3 text-gray-700">No</th>
+      <th className="px-4 py-3 text-gray-700">Name</th>
+      <th className="px-4 py-3 text-gray-700">Email</th>
+      <th className="px-4 py-3 text-gray-700">Action</th>
+    </tr>
+    </thead>
                 <tbody>
-                  {users.map((user, index) => (
-                    <tr key={user.id} className="hover:bg-gray-100">
-                      <td className="border border-gray-300 px-4 py-2 text-center">{index + 1}</td>
-                      <td className="border border-gray-300 px-4 py-2">{user.name}</td>
-                      <td className="border border-gray-300 px-4 py-2">{user.email}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-left p-4">
+                {users
+  .filter(user =>
+    user.role === 'dietian' &&
+    (user.name.toLowerCase().includes(searchQuery) || user.email.toLowerCase().includes(searchQuery))
+  ).map((user, index) => (
+                    <tr key={user.id} className="odd:bg-white even:bg-gray-200 hover:bg-gray-200 transition-colors">
+                      <td className=" px-4 py-2 text-center">{index + 1}</td>
+                      <td className="  px-4 py-2">{user.name}</td>
+                      <td className=" px-4 py-2">{user.email}</td>
+                      <td className=" px-4 py-2 text-left p-4">
+
                         <div className="flex items-center gap-x-4">
                           <button className=" cursor-pointer" onClick={()=>viewDietian(user)}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -281,9 +377,11 @@ function dietian() {
                             </svg>
                           </button>
                           <button className="cursor-pointer" onClick={()=>handleDelete(user)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                            </svg>
+
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 hover:text-red-700">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+              </svg>
+
                           </button>
                           <button
                             onClick={() => handleAssignUsers(user)}
@@ -298,6 +396,9 @@ function dietian() {
                 </tbody>
               </table>
             </div>
+
+            </div>
+
 
             {/*view modal*/}
             {isModalOpen && selectedDietian && (
@@ -380,7 +481,9 @@ function dietian() {
                       </button>
                       <button
                         type="submit"
-                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+
+                        className="bg-yellow-400 px-4 py-2 rounded-md hover:bg-yellow-600"
+
                       >
                         Add Dietitian
                       </button>
@@ -454,7 +557,9 @@ function dietian() {
                     <button
                       type="submit"
                       
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+
+                      className="bg-yellow-400  px-4 py-2 rounded-md hover:bg-yellow-600"
+
                     >
                       Save Changes
                     </button>
@@ -482,7 +587,9 @@ function dietian() {
                   <button
                     onClick={deleteDietian}
                       type="submit"
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+
+                      className="bg-yellow-400  px-4 py-2 rounded-md hover:bg-yellow-600"
+
                     >
                       Delete
                   </button>
@@ -555,7 +662,9 @@ function dietian() {
                   <button
                     onClick={assignDietitian}
                     type="button"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+
+                    className="bg-yellow-400  px-4 py-2 rounded-md hover:bg-yellow-600"
+
                   >
                     Assign
                   </button>

@@ -4,6 +4,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { Link } from 'react-router-dom';
 import Burger from "../assets/images/healthyburger.jpg";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 
 function signIn() {
@@ -25,33 +27,60 @@ function signIn() {
   const handleChange=(e)=>{
     setFormData({...formData, [e.target.name]:e.target.value})
   }
-
-  const registerUser=async(e)=>{
-    e.preventDefault(); 
-    if(formData.password!==formData.confirmPassword){
-      alert("Passwords do not match!");
+  const registerUser = async (e) => {
+    e.preventDefault();
+  
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!formData.name.trim()) {
+      toast.error("Name is required!");
+      return;
+    } else if (!nameRegex.test(formData.name)) {
+      toast.error("Name should contain only alphabets and spaces.");
       return;
     }
-    try{
-      
-      const result=await axios.post("/api/auth/register",{
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      toast.error("Email is required!");
+      return;
+    } else if (!emailRegex.test(formData.email)) {
+      toast.error("Enter a valid email address.");
+      return;
+    }
+  
+    if (!formData.password) {
+      toast.error("Password is required!");
+      return;
+    } else if (formData.password.length < 6) {
+      toast.error("Password should be at least 6 characters.");
+      return;
+    }
+  
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+  
+    try {
+      const result = await axios.post("/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role:"user"
+
+        role: "user",
+
       });
-      
-      if(result)
-      {
+  
+      if (result) {
+        toast.success("Registration successful!");
         navigate("/login");
       }
-    }catch(error){
-      console.error("Unsuccessful registration",error);
-      
-      
+    } catch (error) {
+      console.error("Unsuccessful registration", error);
+      toast.error("Registration failed. Try again.");
     }
-
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -71,12 +100,28 @@ function signIn() {
                 Name
               </label>
               <input
-                type="text"
-                id="name"
-                name="name"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                placeholder="Enter your name" onChange={handleChange}
-              />
+  type="text"
+  id="name"
+  name="name"
+  value={formData.name}
+  onChange={handleChange}
+  onKeyDown={(e) => {
+    const allowedKeys = [
+      ...'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ',
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab'
+    ];
+    if (!allowedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }}
+  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+  placeholder="Enter your name"
+/>
+
             </div>
 
             {/* Email Input */}

@@ -15,14 +15,28 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
-import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const steps = ['Tell us about yourself', 'Choose your type', 'Are you allergic?'];
 
 export default function HorizontalLinearStepper() {
+  // Stepper states
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [dietType, setDietType] = React.useState('');
+
+  // Form data for step 0 (user basics)
+  const [userBasics, setUserBasics] = React.useState({
+    height_cm: '',
+    weight_kg: '',
+    age: '',
+    gender: 'male',
+    exercise: 'none', 
+  });
+
+  // Form data for step 1 (diet type)
+  const [dietType, setDietType] = React.useState('keto'); 
+
+  // Form data for step 2 (allergies)
   const [allergies, setAllergies] = React.useState({
     gluten: false,
     dairy: false,
@@ -32,15 +46,11 @@ export default function HorizontalLinearStepper() {
     shellfish: false,
   });
 
-  const navigate = useNavigate(); // <-- Create navigate instance
+  const navigate = useNavigate();
 
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+  // Helper functions for stepper
+  const isStepOptional = (step) => step === 1;
+  const isStepSkipped = (step) => skipped.has(step);
 
   const handleNext = () => {
     let newSkipped = skipped;
@@ -48,7 +58,6 @@ export default function HorizontalLinearStepper() {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
@@ -61,7 +70,6 @@ export default function HorizontalLinearStepper() {
     if (!isStepOptional(activeStep)) {
       throw new Error("You can't skip a step that isn't optional.");
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
@@ -74,10 +82,21 @@ export default function HorizontalLinearStepper() {
     setActiveStep(0);
   };
 
+  // OnChange handlers for step 0
+  const handleBasicsChange = (e) => {
+    const { name, value } = e.target;
+    setUserBasics((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handler for step 1 (Diet Type)
   const handleDietChange = (event) => {
     setDietType(event.target.value);
   };
 
+  // Handler for step 2 (Allergies)
   const handleAllergyChange = (event) => {
     setAllergies({
       ...allergies,
@@ -85,9 +104,48 @@ export default function HorizontalLinearStepper() {
     });
   };
 
-  const handleFinish = () => {
-    // Navigate to the result page on finish
-    navigate('/result');
+  // Assemble and submit data to backend on Finish
+  const handleFinish = async () => {
+    // Combine allergies that are selected into an array
+    const selectedAllergies = Object.keys(allergies).filter((key) => allergies[key]);
+
+    // Mapping exercise level to activity_level directly; you might refine mapping if necessary.
+    const submissionData = {
+      // Step 0
+      height_cm: Number(userBasics.height_cm),
+      weight_kg: Number(userBasics.weight_kg),
+      age: Number(userBasics.age),
+      gender: userBasics.gender,
+      activity_level: userBasics.exercise, // corresponds to 'exercise' field
+
+      // Step 1
+      diet_preference: dietType,
+
+      // Step 2
+      allergies: selectedAllergies,
+
+      // Optional: default goal (if not selected via UI)
+      goals: 'maintain',
+
+      // Optionally include submittedAt (or have backend default it)
+      submittedAt: new Date(),
+    };
+
+    try {
+      const response = await fetch('/api/auth/submit-input', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submissionData),
+      });
+      if (response.ok) {
+        // On success, you can navigate to the result page or display confirmation
+        navigate('/result');
+      } else {
+        console.error('Submission failed.');
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error);
+    }
   };
 
   return (
@@ -105,9 +163,7 @@ export default function HorizontalLinearStepper() {
                   const stepProps = {};
                   const labelProps = {};
                   if (isStepOptional(index)) {
-                    labelProps.optional = (
-                      <Typography variant="caption"></Typography>
-                    );
+                    labelProps.optional = <Typography variant="caption"></Typography>;
                   }
                   if (isStepSkipped(index)) {
                     stepProps.completed = false;
@@ -137,25 +193,33 @@ export default function HorizontalLinearStepper() {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <div className="mb-4">
-                              <label className="block text-lg mb-2" htmlFor="height">
+                              <label className="block text-lg mb-2" htmlFor="height_cm">
                                 Height (cm)
                               </label>
                               <input
                                 type="number"
-                                id="height"
+                                id="height_cm"
+                                name="height_cm"
+                                value={userBasics.height_cm}
+                                onChange={handleBasicsChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                                 placeholder="Enter your height"
+                                required
                               />
                             </div>
                             <div className="mb-4">
-                              <label className="block text-lg mb-2" htmlFor="weight">
+                              <label className="block text-lg mb-2" htmlFor="weight_kg">
                                 Weight (kg)
                               </label>
                               <input
                                 type="number"
-                                id="weight"
+                                id="weight_kg"
+                                name="weight_kg"
+                                value={userBasics.weight_kg}
+                                onChange={handleBasicsChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                                 placeholder="Enter your weight"
+                                required
                               />
                             </div>
                             <div className="mb-4">
@@ -165,18 +229,25 @@ export default function HorizontalLinearStepper() {
                               <input
                                 type="number"
                                 id="age"
+                                name="age"
+                                value={userBasics.age}
+                                onChange={handleBasicsChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                                 placeholder="Enter your age"
+                                required
                               />
                             </div>
                           </div>
                           <div>
                             <div className="mb-4">
-                              <label className="block text-lg mb-2" htmlFor="sex">
+                              <label className="block text-lg mb-2" htmlFor="gender">
                                 Gender
                               </label>
                               <select
-                                id="sex"
+                                id="gender"
+                                name="gender"
+                                value={userBasics.gender}
+                                onChange={handleBasicsChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                               >
                                 <option value="male">Male</option>
@@ -190,6 +261,9 @@ export default function HorizontalLinearStepper() {
                               </label>
                               <select
                                 id="exercise"
+                                name="exercise"
+                                value={userBasics.exercise}
+                                onChange={handleBasicsChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                               >
                                 <option value="none">None</option>
@@ -202,32 +276,21 @@ export default function HorizontalLinearStepper() {
                         </div>
                       </form>
                     )}
-
                     {activeStep === 1 && (
                       <div>
-                        <p>Select your preferred type of diet:</p>
                         <FormControl component="fieldset">
+                          <FormLabel component="legend">
+                            Select your preferred type of diet:
+                          </FormLabel>
                           <RadioGroup
                             aria-label="diet-type"
                             name="diet-type"
                             value={dietType}
                             onChange={handleDietChange}
                           >
-                            <FormControlLabel
-                              value="keto"
-                              control={<Radio />}
-                              label="Keto"
-                            />
-                            <FormControlLabel
-                              value="vegan"
-                              control={<Radio />}
-                              label="Vegan"
-                            />
-                            <FormControlLabel
-                              value="paleo"
-                              control={<Radio />}
-                              label="Paleo"
-                            />
+                            <FormControlLabel value="keto" control={<Radio />} label="Keto" />
+                            <FormControlLabel value="vegan" control={<Radio />} label="Vegan" />
+                            <FormControlLabel value="paleo" control={<Radio />} label="Paleo" />
                             <FormControlLabel
                               value="mediterranean"
                               control={<Radio />}
@@ -237,11 +300,12 @@ export default function HorizontalLinearStepper() {
                         </FormControl>
                       </div>
                     )}
-
                     {activeStep === 2 && (
                       <div>
-                        <p>What foods are you allergic to? Please select all that apply:</p>
                         <FormControl component="fieldset">
+                          <FormLabel component="legend">
+                            What foods are you allergic to? (Select all that apply)
+                          </FormLabel>
                           <FormGroup>
                             <FormControlLabel
                               control={
@@ -309,12 +373,7 @@ export default function HorizontalLinearStepper() {
                     )}
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                    <Button
-                      color="inherit"
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
-                      sx={{ mr: 1 }}
-                    >
+                    <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
                       Back
                     </Button>
                     <Box sx={{ flex: '1 1 auto' }} />
@@ -323,7 +382,11 @@ export default function HorizontalLinearStepper() {
                         Skip
                       </Button>
                     )}
-                    <Button onClick={activeStep === steps.length - 1 ? handleFinish : handleNext}>
+                    <Button
+                      onClick={
+                        activeStep === steps.length - 1 ? handleFinish : handleNext
+                      }
+                    >
                       {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                     </Button>
                   </Box>

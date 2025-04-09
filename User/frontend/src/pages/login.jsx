@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Burger from "../assets/images/healthyburger.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 
@@ -37,8 +38,14 @@ const Login =  () => {
         password:loginData.password
         
       });
+
+      if(result.data)
+      {
+        toast.success("Login Successfully");
+      }
       if(result.data.role=="user")
       {
+
         navigate('/');
 
       }else if(result.data.role=="admin")
@@ -56,7 +63,7 @@ const Login =  () => {
 
     }catch(error)
     {
-      console.error("unsuccessful login", error.message)
+      toast.error("unsuccessful login", error.message)
     }
   }
 

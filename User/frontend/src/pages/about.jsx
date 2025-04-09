@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from './navbar'
 
 import aboutImage from '../assets/images/about.jpg';
 
@@ -8,7 +9,7 @@ function about() {
   return (
    <section className="bg-white relative mb-18">
     
-   
+   <Navbar/>
     <h1 className="text-4xl justify-center text-center font-bold  pb-10"> About Us</h1>
 
         <div className="container mx-auto px-6 mt-1 grid grid-cols-1 md:grid-cols-2 min-h-[350px]">

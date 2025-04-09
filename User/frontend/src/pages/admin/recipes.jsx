@@ -1,6 +1,8 @@
  import React, { useState,useEffect } from "react";
  import axios from "axios";
  import Navbar from './navbar';
+ import Topbar from "./topbar";
+
  
  function recepies() {
       const [showModal, setShowModal] = useState(false);
@@ -11,7 +13,11 @@
       const indexOfLastRow = currentPage * rowsPerPage;
       const indexOfFirstRow = indexOfLastRow - rowsPerPage;
       const [imageFile, setImageFile] = useState(null);
+      const [searchQuery, setSearchQuery] = useState("");
 
+
+   
+     
       
       const goToPage = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -36,7 +42,9 @@
         useEffect(() => {
           const fetchRecipes = async () => {
               try {
-                  const response = await axios.get("http://localhost:5000/api/auth/recipes"); 
+
+                  const response = await axios.get("/api/auth/recipes"); 
+
                   setRecipes(response.data);
               } catch (error) {
                   console.error("Error fetching recipes:", error);
@@ -47,7 +55,10 @@
       }, []);
 
 
-
+      const filteredRecipes = recipes.filter((recipe) =>
+        recipe.rec_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
 
         const handleAddRecipe = async () => {
           if (!newRecipe.name || !newRecipe.description || !newRecipe.cookingTime || !newRecipe.type || !newRecipe.ingredients || !newRecipe.instructions || !newRecipe.image) {
@@ -69,7 +80,9 @@
           formData.append("rec_image", newRecipe.image);
         
           try {
-            const response = await axios.post("http://localhost:5000/api/auth/recepies-create", 
+
+            const response = await axios.post("/api/auth/recepies-create", 
+
               formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
@@ -118,7 +131,7 @@
         formData.append("rec_image", imageFile); // only if new image selected
       }
   
-      await axios.put(`http://localhost:5000/api/auth/recipes/${recipeId}`, formData, {
+      await axios.put(`/api/auth/recipes/${recipeId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -142,13 +155,30 @@
   // Delete a recipe
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/auth/recipes/${id}`);
+      await axios.delete(`/api/auth/recipes/${id}`);
       setRecipes((prev) => prev.filter((recipe) => recipe._id !== id));
       alert("Recipe deleted successfully!");
     } catch (error) {
       console.error("Error deleting recipe:", error);
       alert("Failed to delete recipe");
     }
+  };
+  const handleDownloadCSV = () => {
+    const csvData = filteredRecipes.map(({ rec_name, rec_type, rec_cooking_time }) => ({
+      Name: rec_name,
+      Type: rec_type,
+      "Cooking Time (mins)": rec_cooking_time
+    }));
+  
+    const headers = Object.keys(csvData[0]).join(",");
+    const rows = csvData.map(row => Object.values(row).join(",")).join("\n");
+    const csvContent = [headers, rows].join("\n");
+  
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "recipes.csv";
+    link.click();
   };
   
         
@@ -157,13 +187,46 @@
   
     <div className="flex h-screen gap-8">
     <Navbar/>
+    <div className="flex-1 ">
+      <Topbar/>
     <div className="flex-1 p-6 overflow-auto">
-      
+
+    <h1 className="text-2xl font-bold mb-5">Recipes</h1>
+
     <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-bold mb-5">Recipes</h1>
+      <div className="relative flex mb-4">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            🔍
+          </span>
+          <input
+            type="text"
+            placeholder="Search recepies"
+            className="pl-10 pr-4 py-2 border border-gray-200 rounded-md w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+       
+       <button
+  className="ml-4 px-4 py-2 bg-blue-500 flex items-center gap-2 rounded-md hover:bg-blue-500"
+
+onClick={handleDownloadCSV}>
+<i class="bi bi-filetype-csv"></i>
+
+</button>
+
+
+<button
+  className="ml-2 px-4 py-2 bg-red-400 flex items-center gap-2 rounded-md hover:bg-red-600 text-white"
+>
+<i class="bi bi-file-earmark-pdf"></i>
+  
+</button>
+
+
+</div>
       <button
         onClick={() => setShowModal(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-600"
       >
         + Add Recipe
       </button>
@@ -212,20 +275,22 @@
     </div> */}
 
   <div className="overflow-x-auto">
-      <table className="min-w-full bg-white">
+  <table id="user-table" className="table-auto w-full text-md border border-gray-200 rounded-4xl">
+
         <thead>
-          <tr className="bg-purple-200">
-            <th className="px-4 py-2">S. No</th>
-            <th className="px-4 py-2">Recipe Name</th>
-            <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Edit</th>
-            <th className="px-4 py-2">Delete</th>
+          <tr className="bg-gray-200 text-left">
+            <th className="px-4 py-3 text-gray-700">S. No</th>
+            <th className="px-4 py-3 text-gray-700">Recipe Name</th>
+            <th className="px-4 py-3 text-gray-700">Image</th>
+            <th className="px-4 py-3 text-gray-700">Type</th>
+            <th className="px-4 py-3 text-gray-700">Action</th>
+           
           </tr>
         </thead>
         <tbody>
           {currentRows.map((recipe, index) => (
-            <tr key={recipe._id} className="text-center">
+            <tr key={recipe._id}         className="odd:bg-white even:bg-gray-200 hover:bg-gray-200 transition-colors"
+>
               <td className="px-4 py-2">{indexOfFirstRow + index + 1}</td>
               <td className="px-4 py-2">{recipe.rec_name}</td>
               <td className="px-4 py-2">
@@ -233,29 +298,34 @@
                   <img
                     src={recipe.rec_image || 'http://localhost:5000/uploads/default-image.jpg'}
                     alt={recipe.rec_name}
-                    className="w-16 h-16 object-cover rounded-md mx-auto"
+                    className="w-8 h-8 object-cover rounded-md mx-auto"
                   />
                 )}
               </td>
               <td className="px-4 py-2">{recipe.rec_type}</td>
               <td className="px-4 py-2">
+              <div className="flex items-center gap-x-4">
+
                 <button
-                  className="px-3 py-1 bg-blue-500 text-white rounded"
+                  
                   onClick={() => handleEdit(recipe)}
                 >
-                  Edit
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-gray-600 hover:text-gray-800">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
                 </button>
-              </td>
-              <td className="px-4 py-2">
+              
                 <button
-                  className="px-3 py-1 bg-red-500 text-white rounded"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(recipe._id);
                   }}
                 >
-                  Delete
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 hover:text-red-700">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+              </svg>
                 </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -263,7 +333,7 @@
       </table>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4 space-x-2">
+      {/* <div className="flex justify-center mt-4 space-x-2">
         {Array.from({ length: totalPages }, (_, i) => (
           <button
             key={i + 1}
@@ -275,7 +345,8 @@
             {i + 1}
           </button>
         ))}
-      </div>
+      </div> */}
+    </div>
     </div>
 
 
