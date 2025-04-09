@@ -23,12 +23,14 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+
     setUser(null);
     setShowDropdown(false);
   
     navigate('/');
   
     window.location.reload();
+
   };
 
   const isLoggedIn = !!user;

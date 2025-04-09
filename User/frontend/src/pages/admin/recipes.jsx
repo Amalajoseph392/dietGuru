@@ -42,7 +42,9 @@
         useEffect(() => {
           const fetchRecipes = async () => {
               try {
+
                   const response = await axios.get("/api/auth/recipes"); 
+
                   setRecipes(response.data);
               } catch (error) {
                   console.error("Error fetching recipes:", error);
@@ -78,7 +80,9 @@
           formData.append("rec_image", newRecipe.image);
         
           try {
+
             const response = await axios.post("/api/auth/recepies-create", 
+
               formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
@@ -292,7 +296,7 @@ onClick={handleDownloadCSV}>
               <td className="px-4 py-2">
                 {recipe.rec_image && (
                   <img
-                    src={`http://localhost:5173${recipe.rec_image}`}
+                    src={recipe.rec_image || 'http://localhost:5000/uploads/default-image.jpg'}
                     alt={recipe.rec_name}
                     className="w-8 h-8 object-cover rounded-md mx-auto"
                   />

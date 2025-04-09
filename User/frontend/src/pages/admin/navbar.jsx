@@ -6,6 +6,7 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
+
     <div className="flex h-screen bg-white text-gray-800">
       {/* Sidebar */}
       <div
@@ -57,6 +58,7 @@ function Navbar() {
           </ul>
         </nav>
       </div>
+
 
       {/* Hamburger Button (Mobile) */}
       <button
