@@ -8,17 +8,6 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 
-function users() {
-    const [users, setUsers] = useState([]);
-    const [client, setClient]= useState([]);
-    const [isModalOpen, setIsModalOpen]=useState(false);
-    const [selectedDietian, setSelectedDietian]=useState(null);
-    const [isEditModalOpen, setEditmodal]=useState(false);
-    const [isDeleteModalOpen,setDeleteModal]=useState(false);
-    const [isAddModalOpen, setAddModal]=useState(false);
-    const [newDietitian, setNewDietitian] = useState({ name: '', email: '', password:'',role: '' });
-
-
 
 function users() {
     const [users, setUsers] = useState([]);
