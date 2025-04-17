@@ -2,6 +2,7 @@ const express=require('express');
 const authController=require('../controller/authController');
 const recepies = require('../controller/recepies');
 const diteian = require('../controller/dietian');
+
 const user_input=require('../controller/meals');
 
 const router=express.Router();
@@ -60,7 +61,10 @@ router.delete('/delete_users/:email', authController.deleteUser);
 
 router.put('/edit_user/:email', authController.editUser);
 
+
 router.post('/submit-input', user_input.user_data_meal);
+
+
 
 router.get('/get_assign_user/:email', diteian.getUserByEmail);
 router.get('/assigned-dietitian/:email', diteian.getAssignedDietitian);

@@ -2,9 +2,13 @@ import React, { useState,useEffect } from "react";
 import axios from "axios";
 import Navbar from './navbar';
 import { modalClasses } from "@mui/material";
+
 import Topbar from "./topbar";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+
+
+
 
 
 
@@ -18,6 +22,7 @@ function users() {
     const [isAddModalOpen, setAddModal]=useState(false);
     const [newDietitian, setNewDietitian] = useState({ name: '', email: '', password:'',role: '' });
     const [searchQuery, setSearchQuery] = useState("");
+
 
 
 
@@ -113,6 +118,7 @@ function users() {
         }
       };
 
+
       const filteredUsers = users.filter(
         (user) =>
           user.role === "user" &&
@@ -120,6 +126,7 @@ function users() {
             user.email.toLowerCase().includes(searchQuery))
       );
       
+
 
 
       //edit icon click
@@ -153,11 +160,13 @@ function users() {
               role: selectedDietian.role,
             }),
           });
+
       
           if (!response.ok) {
             throw new Error('Failed to update dietitian');
           }
       
+
           const data = await response.json();
           alert('Updated successfully');
           closeEditModal(); 
@@ -240,6 +249,7 @@ const downloadPDF = () => {
 
       
 
+
      
      
     
@@ -251,6 +261,7 @@ const downloadPDF = () => {
 
 <div className="flex h-screen gap-8">
 <Navbar/>
+
 <div className="flex-1">
   <Topbar/>
      <div className="p-8 overflow-auto">
@@ -293,11 +304,13 @@ const downloadPDF = () => {
             <button
               onClick={() => setAddModal(true)}
               className="bg-yellow-400  px-4 py-2 rounded hover:bg-yellow-400"
+
             >
               + Add User
             </button>
       </div>
             <div className="overflow-x-auto">
+
             <table id="user-table" className="table-auto w-full text-md border border-gray-200 rounded-4xl">
   <thead>
     <tr className="bg-gray-200 text-left">
@@ -352,8 +365,8 @@ const downloadPDF = () => {
 </table>
 
 
-            </div>
-          </div>
+</div>
+</div>
 
             {/*view modal*/}
             {isModalOpen && selectedDietian && (

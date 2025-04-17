@@ -23,19 +23,21 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+
     setUser(null);
     setShowDropdown(false);
   
     navigate('/');
   
     window.location.reload();
+
   };
 
   const isLoggedIn = !!user;
 
   return (
     <nav>
-      <div className="container mx-auto px-6 py-2 flex justify-between items-center">
+      <div className="container  mx-auto px-6 py-2 flex justify-between items-center">
         <div>
           <h1 className="font-bold text-2xl">
             Diet

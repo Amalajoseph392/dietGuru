@@ -1,102 +1,113 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { format, addDays } from 'date-fns';
 import dietImage from '../assets/images/diet.jpg';
 import Navbar from './navbar';
 
 
-function Result() {
-  const mealRecommendations = [
-    {
-      day: 'Day 1',
-      meals: [
-        { name: 'Breakfast: Avocado Toast', calories: 300, description: 'Whole grain toast with mashed avocado and a poached egg' },
-        { name: 'Lunch: Grilled Chicken Salad', calories: 400, description: 'Grilled chicken breast with mixed greens and balsamic vinaigrette' },
-        { name: 'Dinner: Baked Salmon', calories: 500, description: 'Baked salmon with steamed broccoli and quinoa' }
-      ],
-      totalCalories: 1200
-    },
-    {
-      day: 'Day 2',
-      meals: [
-        { name: 'Breakfast: Smoothie Bowl', calories: 350, description: 'Smoothie bowl with banana, strawberries, and chia seeds' },
-        { name: 'Lunch: Turkey and Avocado Wrap', calories: 450, description: 'Whole wheat wrap with turkey, avocado, lettuce, and tomato' },
-        { name: 'Dinner: Grilled Shrimp Tacos', calories: 500, description: 'Grilled shrimp in corn tortillas with slaw and salsa' }
-      ],
-      totalCalories: 1300
-    },
-    {
-      day: 'Day 3',
-      meals: [
-        { name: 'Breakfast: Greek Yogurt with Berries', calories: 250, description: 'Greek yogurt topped with mixed berries and honey' },
-        { name: 'Lunch: Quinoa Salad with Chickpeas', calories: 400, description: 'Quinoa, chickpeas, cucumber, tomato, and feta cheese' },
-        { name: 'Dinner: Beef Stir Fry', calories: 550, description: 'Beef stir fry with vegetables and brown rice' }
-      ],
-      totalCalories: 1200
-    },
-    {
-      day: 'Day 4',
-      meals: [
-        { name: 'Breakfast: Oatmeal with Almond Butter', calories: 350, description: 'Oatmeal topped with almond butter and banana slices' },
-        { name: 'Lunch: Grilled Chicken Wrap', calories: 450, description: 'Grilled chicken, hummus, and veggies in a whole wheat wrap' },
-        { name: 'Dinner: Baked Cod with Asparagus', calories: 500, description: 'Baked cod with roasted asparagus and mashed sweet potatoes' }
-      ],
-      totalCalories: 1300
-    },
-    {
-      day: 'Day 5',
-      meals: [
-        { name: 'Breakfast: Scrambled Eggs with Spinach', calories: 300, description: 'Scrambled eggs with spinach and mushrooms' },
-        { name: 'Lunch: Tuna Salad', calories: 400, description: 'Tuna mixed with avocado, cucumber, and olive oil dressing' },
-        { name: 'Dinner: Grilled Steak with Sweet Potato', calories: 600, description: 'Grilled steak with a side of roasted sweet potato' }
-      ],
-      totalCalories: 1300
-    }
-  ];
+const Result = () => {
+  const location = useLocation();
+  const { mealPlan, input } = location.state || {};
 
-  return (
-    <section>
-        <Navbar/>
-     <div
-            className="container mx-auto px-6 relative  bg-cover bg-center w-screen mt-1"
-            style={{ backgroundImage: `url(${dietImage})` }}
-          >
-      <div className=" bg-opacity-80 min-h-screen py-16 px-4 flex flex-col items-center justify-center">
-        <div className="max-w-5xl w-full bg-white rounded-lg shadow-xl p-8">
-          <h1 className="text-4xl text-center font-bold text-black mb-8">
-            Recommended <span className='text-yellow-400'>meal plan</span>
-          </h1>
-          <p className="text-xl text-center text-black  text-semibold mb-12">
-            Based on your preferences and goals, here's a 5-day meal plan to help you achieve your desired results.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-6">
-            {mealRecommendations.map((day, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-72"
-              >
-                <h2 className="text-xl text-center font-semibold text-black mb-4">
-                  {day.day}
-                </h2>
-                <div>
-                  {day.meals.map((meal, i) => (
-                    <div key={i} className="mb-4">
-                      <h3 className="font-semibold text-yellow-400">{meal.name}</h3>
-                      <p className="text-gray-600">{meal.description}</p>
-                      <p className="font-semibold text-black">Calories: {meal.calories}</p>
-                    </div>
-                  ))}
-                </div>
-                <h3 className="text-center font-bold text-gray-800 mt-6">
-                  Total Calories: {day.totalCalories}
-                </h3>
-              </div>
-            ))}
-          </div>
+  if (!mealPlan || !input) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-yellow-100 text-gray-700">
+        <div className="bg-white shadow-lg p-8 rounded-lg">
+          <p className="text-xl font-semibold">No meal plan found. Please submit your data first.</p>
         </div>
       </div>
+    );
+  }
+
+  const today = new Date();
+
+  // Calculate total calories for 7 days
+  let totalCalories = 0;
+  Object.values(mealPlan).forEach(day => {
+    totalCalories +=
+      (parseInt(day.breakfast_cal) || 0) +
+      (parseInt(day.lunch_cal) || 0) +
+      (parseInt(day.dinner_cal) || 0);
+  });
+
+  // Daily average
+  const avgDailyCalories = Math.round(totalCalories / 7);
+
+  // Determine goal and expected weekly impact
+  let goalText = '';
+  let calorieAdjustment = 0;
+
+  switch (input.goal) {
+    case 'weight_loss':
+      goalText = 'Weight Loss';
+      calorieAdjustment = -3500; // Roughly 500 deficit/day × 7 = ~1 lb/week
+      break;
+    case 'weight_gain':
+      goalText = 'Weight Gain';
+      calorieAdjustment = 3500; // Surplus
+      break;
+    case 'maintain':
+    default:
+      goalText = 'Maintain Weight';
+      calorieAdjustment = 0;
+  }
+
+  const expectedCalories = totalCalories + calorieAdjustment;
+
+  return (
+    <div className="relative min-h-screen">
+      {/* Background Image Section */}
+      <Navbar/>
+      <div
+        className="container mx-auto px-6 relative  bg-cover bg-center w-screen mt-1"
+        style={{ backgroundImage: `url(${dietImage})` }}
+      >
+      <h1 className="text-3xl font-bold text-emerald-700 mb-4 text-center">🍽️ Your 7-Day Meal Plan</h1>
+
+      {/* Analysis section */}
+      <div className="bg-white shadow-md p-6 mb-6 rounded-xl border border-gray-200 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-2">📊 Analysis Summary</h2>
+        <p className="text-gray-700 mb-1"><strong>Goal:</strong> {goalText}</p>
+        <p className="text-gray-700 mb-1"><strong>Total Calories Planned (7 Days):</strong> {totalCalories} kcal</p>
+        <p className="text-gray-700 mb-1"><strong>Average Daily Intake:</strong> {avgDailyCalories} kcal/day</p>
+        {input.goal !== 'maintain' && (
+          <p className="text-gray-700">
+            <strong>Calorie to {input.goal === 'weight_loss' ? 'burn' : 'gain'}:</strong> {Math.abs(calorieAdjustment)} kcal/week
+          </p>
+        )}
+      </div>
+
+      {/* Meal Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Object.entries(mealPlan).map(([_, meals], index) => {
+          const date = format(addDays(today, index + 1), 'EEEE, MMMM do');
+          return (
+            <div
+              key={index}
+              className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 transition-transform hover:scale-105"
+            >
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">📅 {date}</h2>
+              <div className="space-y-2 text-gray-700">
+                <p>
+                  <span className="font-semibold text-emerald-600">🍳 Breakfast:</span> {meals.breakfast}{' '}
+                  <span className="text-sm text-gray-500">({meals.breakfast_cal} kcal)</span>
+                </p>
+                <p>
+                  <span className="font-semibold text-emerald-600">🥗 Lunch:</span> {meals.lunch}{' '}
+                  <span className="text-sm text-gray-500">({meals.lunch_cal} kcal)</span>
+                </p>
+                <p>
+                  <span className="font-semibold text-emerald-600">🍛 Dinner:</span> {meals.dinner}{' '}
+                  <span className="text-sm text-gray-500">({meals.dinner_cal} kcal)</span>
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default Result;

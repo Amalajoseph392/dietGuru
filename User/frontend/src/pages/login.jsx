@@ -38,12 +38,14 @@ const Login =  () => {
         password:loginData.password
         
       });
+
       if(result.data)
       {
         toast.success("Login Successfully");
       }
       if(result.data.role=="user")
       {
+
         navigate('/');
 
       }else if(result.data.role=="admin")
