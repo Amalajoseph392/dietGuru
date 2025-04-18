@@ -9,9 +9,6 @@ import "jspdf-autotable";
 
 
 
-
-
-
 function users() {
     const [users, setUsers] = useState([]);
     const [client, setClient]= useState([]);
