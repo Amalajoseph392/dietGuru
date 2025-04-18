@@ -42,9 +42,7 @@
         useEffect(() => {
           const fetchRecipes = async () => {
               try {
-
                   const response = await axios.get("/api/auth/recipes"); 
-
                   setRecipes(response.data);
               } catch (error) {
                   console.error("Error fetching recipes:", error);
@@ -80,9 +78,7 @@
           formData.append("rec_image", newRecipe.image);
         
           try {
-
             const response = await axios.post("/api/auth/recepies-create", 
-
               formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });

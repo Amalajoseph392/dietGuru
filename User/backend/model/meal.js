@@ -6,11 +6,11 @@ const UserInputSchema = new mongoose.Schema({
     ref: 'User',
     required: false,
   },
-  height_cm: {
+  height: {
     type: Number,
     required: true,
   },
-  weight_kg: {
+  weight: {
     type: Number,
     required: true,
   },
@@ -23,12 +23,12 @@ const UserInputSchema = new mongoose.Schema({
     enum: ['male', 'female', 'other'],
     required: true,
   },
-  activity_level: {
+  activity: {
     type: String,
     enum: ['none', 'light', 'moderate', 'intense'],
     required: true,
   },
-  diet_preference: {
+  diet: {
     type: String,
     enum: ['keto', 'vegan', 'paleo', 'mediterranean'],
     required: true,
@@ -37,7 +37,7 @@ const UserInputSchema = new mongoose.Schema({
     type: [String], 
     default: [],
   },
-  goals: {
+  goal: {
     type: String,
     enum: ['weight_loss', 'weight_gain', 'maintain'],
     default: 'maintain',

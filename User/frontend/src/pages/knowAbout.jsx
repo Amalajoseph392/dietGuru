@@ -26,7 +26,7 @@ export default function HorizontalLinearStepper() {
 
   // Form data for step 0 (user basics)
   const [userBasics, setUserBasics] = React.useState({
-    height_cm: '',
+    height: '',
     weight_kg: '',
     age: '',
     gender: 'male',
@@ -112,20 +112,20 @@ export default function HorizontalLinearStepper() {
     // Mapping exercise level to activity_level directly; you might refine mapping if necessary.
     const submissionData = {
       // Step 0
-      height_cm: Number(userBasics.height_cm),
-      weight_kg: Number(userBasics.weight_kg),
+      height: Number(userBasics.height),
+      weight: Number(userBasics.weight_kg),
       age: Number(userBasics.age),
       gender: userBasics.gender,
-      activity_level: userBasics.exercise, // corresponds to 'exercise' field
+      activity: userBasics.exercise, // corresponds to 'exercise' field
 
       // Step 1
-      diet_preference: dietType,
+      diet: dietType,
 
       // Step 2
       allergies: selectedAllergies,
 
       // Optional: default goal (if not selected via UI)
-      goals: 'maintain',
+      goal: 'maintain',
 
       // Optionally include submittedAt (or have backend default it)
       submittedAt: new Date(),
@@ -138,8 +138,8 @@ export default function HorizontalLinearStepper() {
         body: JSON.stringify(submissionData),
       });
       if (response.ok) {
-        // On success, you can navigate to the result page or display confirmation
-        navigate('/result');
+        const result = await response.json();
+        navigate('/result', { state: { mealPlan: result.mealPlan, input: result.inputData } });
       } else {
         console.error('Submission failed.');
       }
@@ -193,14 +193,14 @@ export default function HorizontalLinearStepper() {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <div className="mb-4">
-                              <label className="block text-lg mb-2" htmlFor="height_cm">
+                              <label className="block text-lg mb-2" htmlFor="height">
                                 Height (cm)
                               </label>
                               <input
                                 type="number"
-                                id="height_cm"
-                                name="height_cm"
-                                value={userBasics.height_cm}
+                                id="height"
+                                name="height"
+                                value={userBasics.height}
                                 onChange={handleBasicsChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                                 placeholder="Enter your height"
