@@ -4,7 +4,7 @@ import Navbar from './navbar';
 
 import Topbar from "./topbar";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 
 import { modalClasses } from "@mui/material";
@@ -281,12 +281,13 @@ const [startDate, setStartDate] = useState("");
        //   styles: { fontSize: 10 },
        // });
      
-       doc.autoTable({
+       autoTable(doc,{
          head: [['Username', 'Email', 'Role']],
-         body: users.map(user => [user.username, user.email, user.role]),
+         body: users.map(user => [user.name, user.email, user.role]),
+         styles:{fontSize:10}
        });
      
-       doc.save('users.pdf');
+       doc.save('Dietitian list.pdf');
      };
 
      const filteredUsers = users.filter((user) => {
