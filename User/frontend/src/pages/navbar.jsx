@@ -13,16 +13,16 @@ const NavbarMenu = [
 function Navbar() {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUser = JSON.parse(sessionStorage.getItem('user'));
     setUser(storedUser);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
 
     setUser(null);
     setShowDropdown(false);

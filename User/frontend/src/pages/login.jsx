@@ -43,12 +43,12 @@ const Login =  () => {
       {
         toast.success("Login Successfully");
       }
-      if(result.data.role=="user")
+      if(result.data.role=="user" && result.data.email !== "admin@gmail.com")
       {
 
         navigate('/');
 
-      }else if(result.data.role=="admin")
+      }else if(result.data.role=="admin"|| result.data.email == "admin@gmail.com")
       {
         navigate('/AdminDashboard');
       }else if(result.data.role=="dietian"){
@@ -56,7 +56,7 @@ const Login =  () => {
 
       }
      
-      localStorage.setItem("user", JSON.stringify(result.data));
+      sessionStorage.setItem("user", JSON.stringify(result.data));
    
 
 

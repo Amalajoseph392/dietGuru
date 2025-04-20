@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="container mx-auto px-6 bg-black  rounded-lg text-yellow-400 py-8 mb-2">
+    <footer className="container mx-auto px-6 bg-black  rounded-lg text-yellow-400 py-14">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex justify-between items-center">
           <div>
@@ -10,18 +11,16 @@ const Footer = () => {
             <p className="text-sm mt-2">Your healthy meal companion</p>
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="text-sm hover:underline">
+            <Link to="/about" className="text-sm hover:underline">
               About Us
-            </a>
-            <a href="#" className="text-sm hover:underline">
+            </Link>
+            <Link to="/contact" className="text-sm hover:underline">
               Contact
-            </a>
-            <a href="#" className="text-sm hover:underline">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-sm hover:underline">
-              Terms of Service
-            </a>
+            </Link>
+            <Link to="/RecipePage" className="text-sm hover:underline">
+             Recipes 
+            </Link>
+            
           </div>
         </div>
         <div className="mt-6 text-center">

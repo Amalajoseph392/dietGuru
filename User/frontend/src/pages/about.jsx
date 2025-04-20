@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from './navbar'
+import Footer from './footer'
 
 import aboutImage from '../assets/images/about.jpg';
 
@@ -7,7 +8,9 @@ import aboutImage from '../assets/images/about.jpg';
 
 function about() {
   return (
-   <section className="bg-white relative mb-18">
+   <>
+   <Navbar/>
+    <section className="bg-white relative mb-18">
     
     <h1 className="text-4xl justify-center text-center font-bold  pb-10"> About Us</h1>
 
@@ -38,6 +41,10 @@ Our team of nutritionists, chefs, and wellness experts are passionate about crea
     
 
    </section>
+
+   <Footer/>
+   </>
+   
 
   )
 }

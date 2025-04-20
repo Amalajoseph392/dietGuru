@@ -24,6 +24,13 @@ export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
+  const [errorStep0, setErrorStep0] = React.useState('');
+  const [errorStep1, setErrorStep1] = React.useState('');
+  const [errorStep2, setErrorStep2] = React.useState('');
+
+  const [error, setError] = React.useState({  });
+
+
   // Form data for step 0 (user basics)
   const [userBasics, setUserBasics] = React.useState({
     height: '',
@@ -52,15 +59,65 @@ export default function HorizontalLinearStepper() {
   const isStepOptional = (step) => step === 1;
   const isStepSkipped = (step) => skipped.has(step);
 
+  // const handleNext = () => {
+  //   let newSkipped = skipped;
+  //   if (isStepSkipped(activeStep)) {
+  //     newSkipped = new Set(newSkipped.values());
+  //     newSkipped.delete(activeStep);
+  //   }
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  //   setSkipped(newSkipped);
+  // };
+
   const handleNext = () => {
     let newSkipped = skipped;
+    let valid = true;
+    
+    // Step 0 Validation
+    if (activeStep === 0) {
+      if (!validateStep0()) {
+        setErrorStep0('Please fill in all fields with valid data.');
+        valid = false;
+      } else {
+        setErrorStep0('');
+      }
+    }
+  
+    // Step 1 Validation
+    if (activeStep === 1) {
+      if (!validateStep1()) {
+        setErrorStep1('Please select a diet type.');
+        valid = false;
+      } else {
+        setErrorStep1('');
+      }
+    }
+  
+    // Step 2 Validation
+    if (activeStep === 2) {
+      if (!validateStep2()) {
+        setErrorStep2('Please select at least one allergy.');
+        valid = false;
+      } else {
+        setErrorStep2('');
+      }
+    }
+  
+    if (!valid) {
+      return; // Don't proceed to next step if validation fails
+    }
+  
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
+  
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
+
+
+
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -148,6 +205,30 @@ export default function HorizontalLinearStepper() {
     }
   };
 
+  // Step 0: Validate basic information
+const validateStep0 = () => {
+  const { height, weight_kg, age } = userBasics;
+  if (!height || !weight_kg || !age) {
+    return false;
+  }
+  if (isNaN(height) || isNaN(weight_kg) || isNaN(age)) {
+    return false;
+  }
+  return true;
+};
+
+// Step 1: Validate diet type selection
+const validateStep1 = () => {
+  return dietType !== ''; // Make sure a diet type is selected
+};
+
+// Step 2: Validate allergies selection (at least one allergy selected)
+const validateStep2 = () => {
+  const selectedAllergies = Object.values(allergies).some((value) => value);
+  return selectedAllergies; // At least one allergy must be selected
+};
+
+
   return (
     <section>
       <Navbar />
@@ -192,7 +273,8 @@ export default function HorizontalLinearStepper() {
                       <form>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <div className="mb-4">
+                          {errorStep0 && <span style={{ color: 'red' }}>{errorStep0}</span>}
+                          <div className="mb-4">
                               <label className="block text-lg mb-2" htmlFor="height">
                                 Height (cm)
                               </label>
@@ -201,42 +283,79 @@ export default function HorizontalLinearStepper() {
                                 id="height"
                                 name="height"
                                 value={userBasics.height}
-                                onChange={handleBasicsChange}
-                                className="w-full p-2 border border-gray-300 rounded-lg"
-                                placeholder="Enter your height"
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  handleBasicsChange(e); // Update state
+                                  if (value && (value < 50 || value > 300)) {
+                                    setError((prev) => ({ ...prev, height: 'Height must be between 50 and 300 cm.' }));
+                                  } else {
+                                    setError((prev) => ({ ...prev, height: '' })); // Clear error
+                                  }
+                                }}
+                                className={`w-full p-2 border ${
+                                  error.height ? 'border-red-500' : 'border-gray-300'
+                                } rounded-lg`}
+                                placeholder="Enter your height (50-300)"
                                 required
                               />
+                              {error.height && <span className="text-red-600">{error.height}</span>}
                             </div>
+
+
                             <div className="mb-4">
-                              <label className="block text-lg mb-2" htmlFor="weight_kg">
-                                Weight (kg)
-                              </label>
-                              <input
-                                type="number"
-                                id="weight_kg"
-                                name="weight_kg"
-                                value={userBasics.weight_kg}
-                                onChange={handleBasicsChange}
-                                className="w-full p-2 border border-gray-300 rounded-lg"
-                                placeholder="Enter your weight"
-                                required
-                              />
-                            </div>
-                            <div className="mb-4">
-                              <label className="block text-lg mb-2" htmlFor="age">
-                                Age
-                              </label>
-                              <input
-                                type="number"
-                                id="age"
-                                name="age"
-                                value={userBasics.age}
-                                onChange={handleBasicsChange}
-                                className="w-full p-2 border border-gray-300 rounded-lg"
-                                placeholder="Enter your age"
-                                required
-                              />
-                            </div>
+                            <label className="block text-lg mb-2" htmlFor="weight_kg">
+                              Weight (kg)
+                            </label>
+                            <input
+                              type="number"
+                              id="weight_kg"
+                              name="weight_kg"
+                              value={userBasics.weight_kg}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleBasicsChange(e); // Update state
+                                if (value && (value < 10 || value > 500)) {
+                                  setError((prev) => ({ ...prev, weight: 'Weight must be between 10 and 500 kg.' }));
+                                } else {
+                                  setError((prev) => ({ ...prev, weight: '' })); // Clear error
+                                }
+                              }}
+                              className={`w-full p-2 border ${
+                                error.weight ? 'border-red-500' : 'border-gray-300'
+                              } rounded-lg`}
+                              placeholder="Enter your weight (10-500)"
+                              required
+                            />
+                            {error.weight && <span className="text-red-600">{error.weight}</span>}
+                          </div>
+
+                          <div className="mb-4">
+                          <label className="block text-lg mb-2" htmlFor="age">
+                            Age
+                          </label>
+                          <input
+                            type="number"
+                            id="age"
+                            name="age"
+                            value={userBasics.age}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              handleBasicsChange(e); // Update state
+                              if (value && (value < 1 || value > 120)) {
+                                setError((prev) => ({ ...prev, age: 'Age must be between 1 and 120.' }));
+                              } else {
+                                setError((prev) => ({ ...prev, age: '' })); // Clear error
+                              }
+                            }}
+                            className={`w-full p-2 border ${
+                              error.age ? 'border-red-500' : 'border-gray-300'
+                            } rounded-lg`}
+                            placeholder="Enter your age (1-120)"
+                            required
+                          />
+                          {error.age && <span className="text-red-600">{error.age}</span>}
+                        </div>
+
                           </div>
                           <div>
                             <div className="mb-4">

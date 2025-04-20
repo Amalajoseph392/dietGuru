@@ -4,7 +4,7 @@ import { FaUser, FaEnvelope, FaClock, FaUserMd } from 'react-icons/fa';
 import Navbar from './navbar'
 
 function Profile() {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const [assignedDietitian, setAssignedDietitian] = useState(null);
 
   useEffect(() => {
