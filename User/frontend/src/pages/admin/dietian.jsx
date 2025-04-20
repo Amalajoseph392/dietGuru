@@ -24,7 +24,13 @@ function dietian() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
         const [searchQuery, setSearchQuery] = useState("");
-    
+const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  // ✅ Filter users by search + date range
+  const rowsPerPage = 10;
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
 
 
     useEffect(() => {
@@ -283,9 +289,24 @@ function dietian() {
        doc.save('users.pdf');
      };
 
+     const filteredUsers = users.filter((user) => {
+      const matchesSearch =
+        user.name.toLowerCase().includes(searchQuery.toLocaleLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLocaleLowerCase());
+        if (!startDate || !endDate) return matchesSearch;
+      const userDate = new Date(user.AddedOn);
+      const start =  new Date(startDate);
+      const end = new Date(endDate);
+  
      
-
+      return  matchesSearch && userDate>=start && userDate<=end;
+    });
+    const currentRows = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
+    const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
     
+    const goToPage = (pageNumber) => {
+      setCurrentPage(pageNumber);
+    };
     
    return (
    
@@ -312,6 +333,20 @@ function dietian() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
           />
+           <input
+              type="date"
+              className="px-3 py-2 border border-gray-300 rounded-md mx-2"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+
+            <input
+              type="date"
+              className="px-3 py-2 border border-gray-300 rounded-md"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+
        
        <button
   onClick={downloadCSV}
@@ -350,10 +385,11 @@ function dietian() {
       <th className="px-4 py-3 text-gray-700">Name</th>
       <th className="px-4 py-3 text-gray-700">Email</th>
       <th className="px-4 py-3 text-gray-700">Action</th>
+      <th className="px-4 py-3 text-gray-700">Created Date</th>
     </tr>
     </thead>
                 <tbody>
-                {users
+                {currentRows
   .filter(user =>
     user.role === 'dietian' &&
     (user.name.toLowerCase().includes(searchQuery) || user.email.toLowerCase().includes(searchQuery))
@@ -362,7 +398,7 @@ function dietian() {
                       <td className=" px-4 py-2 text-center">{index + 1}</td>
                       <td className="  px-4 py-2">{user.name}</td>
                       <td className=" px-4 py-2">{user.email}</td>
-                      <td className=" px-4 py-2 text-left p-4">
+                      <td className=" px-4 py-2 text-center ">
 
                         <div className="flex items-center gap-x-4">
                           <button className=" cursor-pointer" onClick={()=>viewDietian(user)}>
@@ -391,6 +427,7 @@ function dietian() {
                           </button>
                         </div>
                       </td>
+                      <td>{user.AddedOn.split("T")[0]}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -399,7 +436,21 @@ function dietian() {
 
             </div>
 
-
+            <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => goToPage(i + 1)}
+                className={`px-3 py-1 mx-1 rounded ${
+                  currentPage === i + 1
+                    ? "bg-purple-500 text-white"
+                    : "bg-gray-100"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
             {/*view modal*/}
             {isModalOpen && selectedDietian && (
                  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
