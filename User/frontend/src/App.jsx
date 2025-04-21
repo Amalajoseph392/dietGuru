@@ -17,6 +17,8 @@ import Status from './pages/status';
 import Client from './pages/dietition/clients';
 import View_client from './pages/dietition/view_client'
 
+import { AuthProvider } from '../src/context/AuthContext';
+
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,7 +26,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
 
-     
+<AuthProvider>     
       <Router>
       
         <div>
@@ -66,7 +68,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-    
+      </AuthProvider>
   )
 }
 

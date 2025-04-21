@@ -5,14 +5,14 @@ const jwt=require('jsonwebtoken');
 
 const register=async (req,res)=>{
     try{
-        const {name,email,password, role}=req.body;
+        const {name,email,password, role,AddedOn}=req.body;
         const existUser=await User.findOne({email});
         if(existUser){
             return res.status(400).json({message:'email already exists!'});
            
         }
 
-        const user=new User({name,email,password, role});
+        const user=new User({name,email,password, role,AddedOn});
         await user.save();
 
         res.status(201).json({message:'User regsitered successfully'});

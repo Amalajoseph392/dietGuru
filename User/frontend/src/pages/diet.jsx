@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useContext  } from 'react';
 import dietImage from '../assets/images/diet.jpg';
 import Banana1Image from '../assets/images/pineapple.jpg';
 import Navbar from './navbar';
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../context/AuthContext'; // Import AuthContext
+import { useNavigate } from 'react-router-dom';
 
 
 const Diet = () => {
   // State to control modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const { isLoggedIn } = useContext(AuthContext); // Use AuthContext
+  const navigate = useNavigate();
+
   // Function to toggle modal
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+
+  
+  const handleStartJourney = () => {
+    if (isLoggedIn) {
+      navigate('/know'); // Navigate if logged in
+    } else {
+      toast.error('Please log in to continue'); // Show error toast if not logged in
+    }
+  };
+
+
 
   return (
     <section>
@@ -36,7 +55,7 @@ const Diet = () => {
            
              <Link to="/know">
                <button
-            
+              onClick={handleStartJourney}
               className="primary-btn mt-4 py-3 px-6 rounded-lg text-lg font-semibold hover:bg-opacity-80 transition duration-300"
             >
               Start your Journey

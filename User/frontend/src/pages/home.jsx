@@ -1,13 +1,20 @@
 import React from 'react'
 import Navbar from './navbar'
 import Types from './types'
-import About from './about'
+import About from './aboutHome'
 import Footer from './footer'
 import heroImage from '../assets/images/hero.jpg';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function home() {
+    const navigate = useNavigate();
+
+  const handleClick = () => {
+   
+    navigate('/diet'); // Navigate to /diet
+  };
   return (
    <section className="bg-white  overflow-y-auto relative">
     <Navbar/>
@@ -21,7 +28,8 @@ function home() {
                 <h1 className='text-3xl md:text-4xl whitespace-nowrap font-bold'>Discover the perfect <span className='text-yellow-400 hover:text-emerald-400'>meal plan!</span> </h1>
                 <p class="mt-4 text-lg font-normal px-4 sm:px-8 lg:px-16">Unlock your full potential with a tailored meal plan designed just for you. Our carefully crafted plans provide balanced nutrition to fuel your body and help you achieve your specific health goals. Start your journey today and experience the benefits of a healthier, more energized lifestyle!</p>
                 <div>
-                    <button className='primary-btn mt-4 py-2 px-2 animate-slide-in'>Explore</button>
+                    <button className='primary-btn mt-4 py-2 px-2 animate-slide-in'
+                    onClick={handleClick}>Explore</button>
                 </div>
             </div>
 

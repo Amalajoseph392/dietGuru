@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaUtensils, FaUserMd, FaBars } from "react-icons/fa";
 
 function Navbar() {
@@ -18,45 +18,61 @@ function Navbar() {
           Diet<span className="text-yellow-400">Maestro</span>
         </div>
         <nav>
-          <ul className="space-y-2">
-            <li>
-              <Link
-                to="/AdminDashboard"
-                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
-              >
-                <FaTachometerAlt />
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/AdminUsers"
-                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
-              >
-                <FaUsers />
-                Users
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/AdminRecipes"
-                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
-              >
-                <FaUtensils />
-                Recipes
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/AdminDietian"
-                className="flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100"
-              >
-                <FaUserMd />
-                Dietitian
-              </Link>
-            </li>
-          </ul>
-        </nav>
+      <ul className="space-y-2">
+        <li>
+          <NavLink
+            to="/AdminDashboard"
+            className={({ isActive }) =>
+              `flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100 ${
+                isActive ? "bg-yellow-200 font-semibold" : ""
+              }`
+            }
+          >
+            <FaTachometerAlt />
+            Dashboard
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/AdminUsers"
+            className={({ isActive }) =>
+              `flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100 ${
+                isActive ? "bg-yellow-200 font-semibold" : ""
+              }`
+            }
+          >
+            <FaUsers />
+            Users
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/AdminRecipes"
+            className={({ isActive }) =>
+              `flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100 ${
+                isActive ? "bg-yellow-200 font-semibold" : ""
+              }`
+            }
+          >
+            <FaUtensils />
+            Recipes
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/AdminDietian"
+            className={({ isActive }) =>
+              `flex items-center gap-3 py-2 px-4 rounded hover:bg-yellow-100 ${
+                isActive ? "bg-yellow-200 font-semibold" : ""
+              }`
+            }
+          >
+            <FaUserMd />
+            Dietitian
+          </NavLink>
+        </li>
+      </ul>
+    </nav>
       </div>
 
 
