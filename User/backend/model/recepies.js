@@ -8,6 +8,7 @@ const recipeSchema = new mongoose.Schema({
   rec_ingredients: { type: [String], required: true },
   rec_instructions: { type: String, required: true },
   rec_image: { type: String, required: true },
+  AddedOn:{type:Date,default:Date.now()}
 });
 
 module.exports = mongoose.model("Recipes", recipeSchema, "recepies-create");

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { format, addDays } from 'date-fns';
+// import { format, addDays } from 'date-fns';
 import dietImage from '../assets/images/diet.jpg';
 import Navbar from './navbar';
 
