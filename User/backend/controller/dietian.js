@@ -55,6 +55,23 @@ const user_assign = async (req, res) => {
     }
   };
   
+  const getUsersByDietitianEmail = async (req, res) => {
+    try {
+      const { email } = req.params;
+  
+      const dietitian = await User.findOne({ email });
+  
+      if (!dietitian) {
+        return res.status(404).json({ message: 'Dietitian not found' });
+      }
+  
+      const assignedUsers = dietitian.assigned_users || [];
+  
+      res.status(200).json({ assigned_users: assignedUsers });
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to fetch assigned users', error: err.message });
+    }
+  };
   
 
 
@@ -67,5 +84,6 @@ const user_assign = async (req, res) => {
 module.exports={
     user_assign,
     getUserByEmail,
-    getAssignedDietitian
+    getAssignedDietitian,
+    getUsersByDietitianEmail
 }

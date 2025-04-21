@@ -35,7 +35,7 @@ const login=async(req,res)=>{
         if(user.password!==password){
             return res.status(400).json({message:'Invalid password!'})
         }
-        console.log("user", user);
+     
        
         
 

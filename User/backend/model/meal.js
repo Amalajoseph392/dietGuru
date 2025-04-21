@@ -45,6 +45,10 @@ const UserInputSchema = new mongoose.Schema({
   submittedAt: {
     type: Date,
     default: Date.now,
+  },
+  email: {
+    type: String,
+    required: true,
   }
 });
 
