@@ -6,7 +6,6 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Navbar from './navbar';
-import Banana1Image from '../assets/images/pineapple.jpg';
 import dietImage from '../assets/images/diet.jpg';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -37,11 +36,11 @@ export default function HorizontalLinearStepper() {
     weight_kg: '',
     age: '',
     gender: 'male',
-    exercise: 'none', 
+    exercise: 'none',
   });
 
   // Form data for step 1 (diet type)
-  const [dietType, setDietType] = React.useState('keto'); 
+  const [dietType, setDietType] = React.useState('keto');
 
   // Form data for step 2 (allergies)
   const [allergies, setAllergies] = React.useState({
@@ -163,6 +162,10 @@ export default function HorizontalLinearStepper() {
 
   // Assemble and submit data to backend on Finish
   const handleFinish = async () => {
+    // Get email from localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+
+
     // Combine allergies that are selected into an array
     const selectedAllergies = Object.keys(allergies).filter((key) => allergies[key]);
 
@@ -183,6 +186,9 @@ export default function HorizontalLinearStepper() {
 
       // Optional: default goal (if not selected via UI)
       goal: 'maintain',
+
+      // Add email from localStorage
+      email: user.email,
 
       // Optionally include submittedAt (or have backend default it)
       submittedAt: new Date(),
@@ -258,7 +264,7 @@ const validateStep2 = () => {
               </Stepper>
               {activeStep === steps.length ? (
                 <React.Fragment>
-                  <Typography sx={{ mt: 2, mb: 1 }}>
+                  <Typography sx={{ mt: 2, mb: 1 }} component="div">
                     All steps completed - you're finished
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -268,7 +274,7 @@ const validateStep2 = () => {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <Typography sx={{ mt: 2, mb: 1 }}>
+                  <Typography sx={{ mt: 2, mb: 1 }} component="div">
                     {activeStep === 0 && (
                       <form>
                         <div className="grid grid-cols-2 gap-4">
@@ -490,25 +496,26 @@ const validateStep2 = () => {
                         </FormControl>
                       </div>
                     )}
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                    <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-                      Back
-                    </Button>
-                    <Box sx={{ flex: '1 1 auto' }} />
-                    {isStepOptional(activeStep) && (
-                      <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                        Skip
+                    <div className="flex justify-between mt-6">
+                      <Button
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                        variant="contained"
+                        color="primary"
+                      >
+                        Back
                       </Button>
-                    )}
-                    <Button
-                      onClick={
-                        activeStep === steps.length - 1 ? handleFinish : handleNext
-                      }
-                    >
-                      {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                  </Box>
+                      {activeStep === steps.length - 1 ? (
+                        <Button onClick={handleFinish} variant="contained" color="primary">
+                          Finish
+                        </Button>
+                      ) : (
+                        <Button onClick={handleNext} variant="contained" color="primary">
+                          Next
+                        </Button>
+                      )}
+                    </div>
+                  </Typography>
                 </React.Fragment>
               )}
             </Box>

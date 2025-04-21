@@ -52,7 +52,7 @@ const Login =  () => {
       {
         navigate('/AdminDashboard');
       }else if(result.data.role=="dietian"){
-        navigate('/DietDashboard');
+        navigate('/client');
 
       }
      

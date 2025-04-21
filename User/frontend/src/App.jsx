@@ -13,7 +13,9 @@ import AdminUsers from './pages/admin/users';
 import AdminRecipes from './pages/admin/recipes';
 import AdminDietian from './pages/admin/dietian';
 import Profile from './pages/profile';
-import DietDashboard from './pages/dietian/dashboard';
+import Status from './pages/status';
+import Client from './pages/dietition/clients';
+import View_client from './pages/dietition/view_client'
 
 import { AuthProvider } from '../src/context/AuthContext';
 
@@ -54,7 +56,11 @@ function App() {
             <Route path="/AdminRecipes" element={<AdminRecipes />} /> 
             <Route path="/AdminDietian" element={<AdminDietian />} /> 
             <Route path="/profile" element={<Profile/>}/>
-            <Route path="/DietDashboard" element={<DietDashboard/>}/>
+            <Route path="/status_log" element={<Status/>}/>
+            <Route path="/client" element={<Client/>}/>
+            <Route path="/view-client/:email" element={<View_client />} />            
+
+
 
 
 
