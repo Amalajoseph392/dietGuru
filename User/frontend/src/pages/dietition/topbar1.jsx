@@ -20,7 +20,7 @@ const Topbar = () => {
           className="flex items-center gap-2 text-gray-700 hover:text-emerald-500"
         >
           <FaUserCircle className="text-3xl" />
-          <span className="font-semibold">Dietition</span>
+          <span className="font-semibold">Dietitian</span>
         </button>
 
         {dropdownOpen && (
