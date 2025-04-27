@@ -18,7 +18,7 @@ const Status = () => {
     Array(7).fill({ breakfast: '', lunch: '', dinner: '', submitted: false, error: '' })
   );
 
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
   useEffect(() => {
     const fetchUser = async () => {

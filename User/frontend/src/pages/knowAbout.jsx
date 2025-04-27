@@ -163,7 +163,7 @@ export default function HorizontalLinearStepper() {
   // Assemble and submit data to backend on Finish
   const handleFinish = async () => {
     // Get email from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(sessionStorage.getItem('user'));
 
 
     // Combine allergies that are selected into an array

@@ -9,7 +9,7 @@ import "jspdf-autotable";
 function Clients() {
   const [assignedUsers, setAssignedUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
   const dietitianEmail = user.email; 
   const navigate = useNavigate();  // Hook for navigation
