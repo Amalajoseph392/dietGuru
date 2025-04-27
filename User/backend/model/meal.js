@@ -49,6 +49,10 @@ const UserInputSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+  },
+  bmi: {
+    type: String,
+    required: true,
   }
 });
 

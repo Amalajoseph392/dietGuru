@@ -29,9 +29,9 @@ const getMealPlanByEmail = async (req, res) => {
   }
 };
 
-const addActualPlan= async (req, res) => {
+const addActualPlan = async (req, res) => {
   const { email, day } = req.params;
-  const { breakfast, lunch, dinner } = req.body;
+  const { breakfast, lunch, dinner, breakfast_grams, lunch_grams, dinner_grams, comment } = req.body;
 
   try {
     const updatedPlan = await User.findOneAndUpdate(
@@ -41,7 +41,11 @@ const addActualPlan= async (req, res) => {
           [`actual_plan.${day}`]: {
             breakfast,
             lunch,
-            dinner
+            dinner,
+            breakfast_grams,
+            lunch_grams,
+            dinner_grams,
+            comment, // Adding the dietitian's comment
           }
         }
       },
