@@ -17,66 +17,14 @@ const user_assign = async (req, res) => {
     }
   };
 
-// const user_assign = async (req, res) => {
-//   try {
-//     const { dietian_name, email, assigned_users } = req.body;
-
-//     // Fetch users that are unassigned to any dietitian
-//     const unassignedUsers = await User.find(
-//       { dietian_name: { $exists: false } }, // Find users with no dietitian assigned
-//       { password: 0 } // Exclude password for security
-//     );
-
-//     if (!unassignedUsers || unassignedUsers.length === 0) {
-//       return res.status(400).json({ message: 'No unassigned users available' });
-//     }
-
-//     // Find or create a dietitian entry and update the assigned users
-//     const updatedOrNewDietitian = await User.findOneAndUpdate(
-//       { email },
-//       { dietian_name, email, assigned_users },
-//       { new: true, upsert: true } // Create a new document if not found
-//     );
-
-//     res.status(200).json({
-//       message: 'Users assigned successfully',
-//       dietitian: updatedOrNewDietitian,
-//       unassignedUsers, // Return the list of unassigned users
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: 'Something went wrong', error: err.message });
-//   }
-// };
-
-  // const getUserByEmail = async (req, res) => {
-  //   try {
-  //     const { email } = req.params;
-  
-  //     const user = await User.findOne({ email }, { password: 0 }); 
-  
-  //     if (!user) {
-  //       return res.status(404).json({ message: 'User not found' });
-  //     }
-  
-  //     res.status(200).json(user);
-  //   } catch (err) {
-  //     res.status(500).json({ message: 'Failed to fetch user', error: err.message });
-  //   }
-  // };
-
-
   const getUserByEmail = async (req, res) => {
     try {
       const { email } = req.params;
   
-      // Find the user by email and ensure they haven't been assigned a dietitian
-      const user = await User.findOne(
-        { email, dietian_name: { $exists: false } }, 
-        { password: 0 } 
-      );
+      const user = await User.findOne({ email }, { password: 0 }); 
   
       if (!user) {
-        return res.status(404).json({ message: 'User not found or already assigned to a dietitian' });
+        return res.status(404).json({ message: 'User not found' });
       }
   
       res.status(200).json(user);
@@ -84,7 +32,7 @@ const user_assign = async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch user', error: err.message });
     }
   };
-  
+
 
   
   const getAssignedDietitian = async (req, res) => {
