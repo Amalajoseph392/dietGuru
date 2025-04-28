@@ -22,20 +22,21 @@ const user_data_meal = async (req, res) => {
       activity: req.body.activity,
       diet: req.body.diet,
       allergies: req.body.allergies[0] || "", // just sending one allergy
-      goal: req.body.goal
+      goal: req.body.goal,
+      bmi:req.body.bmi,
     };
 
     // 3. Check if a meal plan already exists for the provided email
-    // const existingMealPlan = await MealPlan.findOne({ email: req.body.email });
+    const existingMealPlan = await MealPlan.findOne({ email: req.body.email });
 
-    // if (existingMealPlan) {
-    //   // If a meal plan exists, return the existing one
-    //   return res.status(200).json({
-    //     success: true,
-    //     message: 'Meal plan already exists for this email!',
-    //     existingPlan: existingMealPlan // return the existing meal plan
-    //   });
-    // }
+    if (existingMealPlan) {
+      // If a meal plan exists, return the existing one
+      return res.status(200).json({
+        success: true,
+        message: 'Meal plan already exists for this email!',
+        existingPlan: existingMealPlan // return the existing meal plan
+      });
+    }
 
     // 4. Call Flask ML API to generate a new meal plan
     const mlResponse = await axios.post('http://127.0.0.1:5001/predict', mlInput);
