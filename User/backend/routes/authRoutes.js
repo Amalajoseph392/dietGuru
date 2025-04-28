@@ -38,7 +38,6 @@ router.get('/users',authController.getAllUsers);
 router.get('/totalCount',authController.totalUsers);
 
 
-
 // ............... fetching all recepies ..................
 router.get("/recipes", recepies.getAllRecepies);
 
@@ -76,8 +75,8 @@ router.put('/meal-plan/:email/actual/:day',mealPlan.addActualPlan);
 router.get('/assigned-users/:email', diteian.getUsersByDietitianEmail);
 router.put('/edit_plan/:email',mealPlan.editMeal);
 
-router.get('/getTotalMealPlansCount',mealPlan.getTotalMealPlansCount);
 
+router.get('/getTotalMealPlansCount',mealPlan.getTotalMealPlansCount);
 
 module.exports=router;
 
