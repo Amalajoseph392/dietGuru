@@ -162,38 +162,53 @@ export default function HorizontalLinearStepper() {
 
   // Assemble and submit data to backend on Finish
   const handleFinish = async () => {
-    // Get email from localStorage
+    // Get email from sessionStorage
     const user = JSON.parse(sessionStorage.getItem('user'));
-
-
+  
+    // Extract height (cm) and weight (kg) from user input
+    const heightInMeters = Number(userBasics.height) / 100; // Convert height to meters
+    const weightInKg = Number(userBasics.weight_kg); // Weight is already in kg
+  
+    // Calculate BMI
+    const bmi = (weightInKg / (heightInMeters * heightInMeters)).toFixed(2); // Round to two decimal places
+  
+    // Set the goal based on BMI
+    let goal = 'maintain';  // Default goal
+    if (bmi < 18.5) {
+      goal = 'weight_gain';
+    } else if (bmi >= 25) {
+      goal = 'weight_loss';
+    }
+  
     // Combine allergies that are selected into an array
     const selectedAllergies = Object.keys(allergies).filter((key) => allergies[key]);
-
+  
     // Mapping exercise level to activity_level directly; you might refine mapping if necessary.
     const submissionData = {
       // Step 0
       height: Number(userBasics.height),
-      weight: Number(userBasics.weight_kg),
+      weight: weightInKg,
+      bmi: bmi, // Add BMI to the data
       age: Number(userBasics.age),
       gender: userBasics.gender,
       activity: userBasics.exercise, // corresponds to 'exercise' field
-
+  
       // Step 1
       diet: dietType,
-
+  
       // Step 2
       allergies: selectedAllergies,
-
-      // Optional: default goal (if not selected via UI)
-      goal: 'maintain',
-
-      // Add email from localStorage
+  
+      // Set the goal based on BMI
+      goal: goal,
+  
+      // Add email from sessionStorage
       email: user.email,
-
+  
       // Optionally include submittedAt (or have backend default it)
       submittedAt: new Date(),
     };
-
+  
     try {
       const response = await fetch('/api/auth/submit-input', {
         method: 'POST',
@@ -210,7 +225,8 @@ export default function HorizontalLinearStepper() {
       console.error('Error submitting data:', error);
     }
   };
-
+  
+  
   // Step 0: Validate basic information
 const validateStep0 = () => {
   const { height, weight_kg, age } = userBasics;
