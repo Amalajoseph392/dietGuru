@@ -64,6 +64,27 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+
+
+const totalUsers = async (req, res) => {
+    try {
+        // Count the total number of users
+        const totalCount = await User.countDocuments({ role: { $ne: 'admin' } });
+
+
+         // Count the total number of dietitians (role: 'dietian')
+         const dietitianCount = await User.countDocuments({ role: "dietian" });
+
+
+        res.status(200).json({
+            totalCount,
+            dietitianCount,
+        });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+    }
+};
+
 //delete user
 
 const deleteUser = async (req, res) => {
@@ -115,5 +136,6 @@ module.exports={
     login,
     getAllUsers,
     deleteUser,
-    editUser
+    editUser,
+    totalUsers
 }

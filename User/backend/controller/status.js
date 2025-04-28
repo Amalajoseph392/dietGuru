@@ -29,9 +29,34 @@ const getMealPlanByEmail = async (req, res) => {
   }
 };
 
-const addActualPlan = async (req, res) => {
+
+
+const getTotalMealPlansCount = async (req, res) => {
+  try {
+    // Count the total number of meal plans in the collection
+    const totalCount = await User.countDocuments();
+
+    res.status(200).json({
+      totalMealPlans: totalCount
+    });
+
+  } catch (error) {
+    console.error('Error fetching total meal plans count:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving total meal plans count',
+      error: error.message
+    });
+  }
+};
+
+
+
+
+
+const addActualPlan= async (req, res) => {
   const { email, day } = req.params;
-  const { breakfast, lunch, dinner, breakfast_grams, lunch_grams, dinner_grams, comment } = req.body;
+  const { breakfast, lunch, dinner } = req.body;
 
   try {
     const updatedPlan = await User.findOneAndUpdate(
@@ -41,11 +66,7 @@ const addActualPlan = async (req, res) => {
           [`actual_plan.${day}`]: {
             breakfast,
             lunch,
-            dinner,
-            breakfast_grams,
-            lunch_grams,
-            dinner_grams,
-            comment, // Adding the dietitian's comment
+            dinner
           }
         }
       },
@@ -86,5 +107,5 @@ const editMeal= async (req, res) => {
 
 
 module.exports = {
-  getMealPlanByEmail,addActualPlan,editMeal
+  getMealPlanByEmail,addActualPlan,editMeal,getTotalMealPlansCount
 };
