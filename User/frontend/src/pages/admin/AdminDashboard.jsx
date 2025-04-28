@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import Navbar from "./navbar";
 import Topbar from "./topbar";
 import {
@@ -15,19 +15,59 @@ import {
 } from "recharts";
 import { FaUser, FaUserMd } from "react-icons/fa";
 
-const barData = [
-  { name: "Registered", count: 300 },
-  { name: "Meal Plans", count: 180 },
-];
 
-const pieData = [
-  { name: "Users", value: 300 },
-  { name: "Dietitians", value: 45 },
-];
-
-const COLORS = ["#34d399", "#facc15"]; // emerald-400, yellow-400
+const COLORS = ["#34d399", "#facc15"]; 
 
 const AdminDashboard = () => {
+
+  const [totalCount, setTotalCount] = useState(0);
+  const [dietitian, setDietitian] = useState(0);
+  const [mealCount, setMealCount] = useState(0);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch("/api/auth/totalCount"); 
+        const data = await response.json();
+
+        
+        setTotalCount(data.totalCount);
+        setDietitian(data.dietitianCount);
+      } catch (error) {
+        console.error("Error fetching total count:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    const fetchMealCount = async () => {
+      try {
+        
+        const response = await fetch("/api/auth/getTotalMealPlansCount"); 
+        const data = await response.json();
+
+        setMealCount(data.totalMealPlans); 
+      } catch (error) {
+        console.error("Error fetching total meal plans:", error);
+      }
+    };
+
+    fetchMealCount();
+  }, []);
+
+  // Dynamically update bar data based on fetched data
+  const barData = [
+    { name: "Users", count: totalCount - dietitian }, 
+    { name: "Meal Plans", count: mealCount },
+  ];
+
+  const pieData = [
+    { name: "Users", value: totalCount - dietitian }, 
+    { name: "Dietitians", value: dietitian },
+  ];
+
   return (
     <div className="flex min-h-screen bg-white">
       <Navbar />
@@ -45,14 +85,14 @@ const AdminDashboard = () => {
             <FaUser className="text-yellow-400 text-3xl" />
             <div>
               <p className="text-gray-500">Total Users</p>
-              <h2 className="text-xl font-bold text-gray-800">300</h2>
+              <h2 className="text-xl font-bold text-gray-800">{totalCount}</h2>
             </div>
           </div>
           <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-yellow-400">
             <FaUserMd className="text-yellow-400 text-3xl" />
             <div>
               <p className="text-gray-500">Total Dietitians</p>
-              <h2 className="text-xl font-bold text-gray-800">45</h2>
+              <h2 className="text-xl font-bold text-gray-800">{dietitian}</h2>
             </div>
           </div>
         </div>

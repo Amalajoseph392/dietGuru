@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const NavbarMenu = [
   { id: 1, title: 'Home', path: '/' },
   { id: 2, title: 'Diet Plan', path: '/diet' },
-  { id: 3, title: 'Recipes', path: '/recipies' },
+  { id: 3, title: 'Recepies', path: '/recipies' },
   { id: 4, title: 'About Us', path: '/about' },
 ];
 
