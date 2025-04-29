@@ -35,11 +35,13 @@ router.post('/login',authController.login)
 // ............... fetching all users ..................
 router.get('/users',authController.getAllUsers);
 
-router.get('/totalCount',authController.totalUsers);
 
 
 // ............... fetching all recepies ..................
 router.get("/recipes", recepies.getAllRecepies);
+
+router.get('/totalCount',authController.totalUsers);
+
 
 // ............... update receipes by id ..................
 router.put('/recipes/:id', upload.single('rec_image'), recepies.recepieUpdate);
@@ -75,8 +77,8 @@ router.put('/meal-plan/:email/actual/:day',mealPlan.addActualPlan);
 router.get('/assigned-users/:email', diteian.getUsersByDietitianEmail);
 router.put('/edit_plan/:email',mealPlan.editMeal);
 
-
 router.get('/getTotalMealPlansCount',mealPlan.getTotalMealPlansCount);
+
 
 module.exports=router;
 

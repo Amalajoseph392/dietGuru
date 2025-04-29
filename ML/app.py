@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
-import pandas as pd
-from sklearn.neighbors import NearestNeighbors
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
+from flask import Flask, request, jsonify # type: ignore
+import pandas as pd # type: ignore
+from sklearn.neighbors import NearestNeighbors # type: ignore
+from sklearn.preprocessing import OneHotEncoder # type: ignore
+from sklearn.compose import ColumnTransformer # type: ignore
+from sklearn.pipeline import Pipeline # type: ignore
 from datetime import datetime, timedelta
 
 app = Flask(__name__)

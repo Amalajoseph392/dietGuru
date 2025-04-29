@@ -31,6 +31,7 @@ const getMealPlanByEmail = async (req, res) => {
 
 
 
+
 const getTotalMealPlansCount = async (req, res) => {
   try {
     // Count the total number of meal plans in the collection
@@ -49,7 +50,6 @@ const getTotalMealPlansCount = async (req, res) => {
     });
   }
 };
-
 
 
 

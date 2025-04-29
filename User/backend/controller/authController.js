@@ -67,7 +67,6 @@ const getAllUsers = async (req, res) => {
 
 
 
-
 const totalUsers = async (req, res) => {
     try {
         // Count the total number of users
@@ -86,8 +85,6 @@ const totalUsers = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch users', error: err.message });
     }
 };
-
-
 
 
 //delete user
@@ -141,6 +138,6 @@ module.exports={
     login,
     getAllUsers,
     deleteUser,
-    totalUsers,
-    editUser
+    editUser,
+    totalUsers
 }

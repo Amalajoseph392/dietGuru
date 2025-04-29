@@ -8,7 +8,7 @@ const Topbar = () => {
 
   const handleLogout = () => {
     // Clear auth data here
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   };
 
